@@ -40,4 +40,11 @@ describe('serialize', () => {
     expect(s.range).toEqual({ low: '3A', high: '5E' });
     expect(s.notes.length).toBeGreaterThan(0);
   });
+
+  it('loads every bundled sample song', () => {
+    const files = import.meta.glob('../src/samples/*.bellscore.json', { eager: true, import: 'default' });
+    const ids = Object.values(files).map((data) => parseSong(data).id);
+    expect(ids.length).toBeGreaterThanOrEqual(3);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
 });
