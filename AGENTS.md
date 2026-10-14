@@ -47,7 +47,7 @@ TypeScript strict、インデントは 2 スペース、シングルクォート
 `src/model/` を変えたら `tests/` に Vitest のテストを追加・更新します。特に、音名変換、JSON・共有URLの往復、不正データの拒否、同梱サンプル曲が読み込めることは維持してください。
 
 ## コミットと Pull Request
-コミットメッセージは `Add loop playback` や `Fix note length clamping` のように、命令形で具体的に書きます。このリポジトリはまだ GitHub にありません。
+コミットメッセージは `Add loop playback` や `Fix note length clamping` のように、命令形で具体的に書きます。リモートは https://github.com/yoshi-git/handbell （`main` ブランチ）です。
 
 ## エージェント向け注意事項
 無関係なローカル変更は巻き戻さないでください。挙動を変更する場合は、原因、対応策、期待結果を説明してください。ユーザーが作った曲をサンプル曲として同梱する際は、ユーザーから受け取った JSON をそのまま `src/samples/` に置きます。同梱の `twinkle.bellscore.json` は動作確認用の仮のサンプルです。

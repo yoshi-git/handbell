@@ -4,13 +4,22 @@ import { PlayerPanel, UNASSIGNED } from '../components/PlayerPanel';
 import { ScoreGrid } from '../components/ScoreGrid';
 import { SELECTABLE_NOTES, displayName, toMidi, type Accidental } from '../model/pitch';
 import {
+  canTranspose,
+  copySelection,
+  deleteSelection,
   hiddenNoteCount,
+  insertMeasures,
   newId,
+  pasteArea,
+  pasteClip,
   players as listPlayers,
   setAssignment,
   setSubdivisions,
   stepsPerMeasure,
   totalSteps,
+  transpose,
+  type Clip,
+  type Selection,
 } from '../model/song';
 import { encodeForUrl, songToJson } from '../model/serialize';
 import type { NoteName, Song } from '../model/types';
@@ -32,6 +41,9 @@ const SUBDIVISION_OPTIONS = [
   { value: 3, label: '3連符' },
   { value: 4, label: '16分音符' },
 ];
+
+/** Shared across editors so an area can be copied from one song into another. */
+let clipboard: Clip | null = null;
 
 function loadPref<T extends string>(key: string, fallback: T): T {
   try {
@@ -57,6 +69,9 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   const [accidental, setAccidental] = useState<Accidental>(() => loadPref('bellscore.accidental', 'sharp'));
   const [stepWidth, setStepWidth] = useState(() => Number(loadPref('bellscore.zoom', '24')) || 24);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [tool, setTool] = useState<'note' | 'select'>('note');
+  const [selection, setSelection] = useState<Selection | null>(null);
+  const [clip, setClip] = useState<Clip | null>(clipboard);
 
   const change = useCallback((next: Song, transient = false) => {
     setHist((h) => {
@@ -175,6 +190,26 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
     return next;
   };
 
+  // ---- area editing ----
+  const selecting = !readOnly && mode === 'edit' && tool === 'select';
+  const copy = useCallback(() => {
+    if (!selection) return;
+    clipboard = copySelection(song, selection);
+    setClip(clipboard);
+  }, [song, selection]);
+  const removeSelected = useCallback(() => {
+    if (selection) change(deleteSelection(song, selection));
+  }, [song, selection, change]);
+  const cut = useCallback(() => {
+    copy();
+    removeSelected();
+  }, [copy, removeSelected]);
+  const paste = useCallback(() => {
+    if (!selection || !clip) return;
+    change(pasteClip(song, clip, selection.from));
+    setSelection(pasteArea(song, clip, selection.from));
+  }, [song, selection, clip, change]);
+
   // ---- keyboard shortcuts ----
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -191,11 +226,19 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
       } else if (!readOnly && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
         e.preventDefault();
         redo();
+      } else if (selecting && (e.ctrlKey || e.metaKey) && ['c', 'x', 'v'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        ({ c: copy, x: cut, v: paste })[e.key.toLowerCase() as 'c' | 'x' | 'v']();
+      } else if (selecting && (e.key === 'Delete' || e.key === 'Backspace')) {
+        e.preventDefault();
+        removeSelected();
+      } else if (selecting && e.key === 'Escape') {
+        setSelection(null);
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [playing, play, stop, undo, redo, readOnly]);
+  }, [playing, play, stop, undo, redo, readOnly, selecting, copy, cut, paste, removeSelected]);
 
   const onAssign = useCallback(
     (pitch: NoteName, name: string) => setHist((h) => {
@@ -309,6 +352,12 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
               <button onClick={() => change({ ...song, measures: Math.max(1, song.measures - 1) })}>−</button>
               <span className="num">{song.measures}</span>
               <button onClick={() => change({ ...song, measures: song.measures + 1 })}>＋</button>
+              <button
+                title="再生開始位置（▼）の小節の前に空白の小節を1つ挿入"
+                onClick={() => change(insertMeasures(song, Math.floor(startStep / spm)))}
+              >
+                {Math.min(Math.floor(startStep / spm), song.measures) + 1}小節目に空白小節を挿入
+              </button>
             </label>
             <label>
               音域
@@ -334,6 +383,48 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
                 ))}
               </select>
             </label>
+            <label>
+              移調
+              {[
+                { n: -12, label: '−8va', title: '1オクターブ下げる' },
+                { n: -1, label: '−½', title: '半音下げる' },
+                { n: 1, label: '+½', title: '半音上げる' },
+                { n: 12, label: '+8va', title: '1オクターブ上げる' },
+              ].map(({ n, label, title }) => (
+                <button
+                  key={n}
+                  title={title}
+                  disabled={!song.notes.length || !canTranspose(song, n)}
+                  onClick={() => change(transpose(song, n))}
+                >
+                  {label}
+                </button>
+              ))}
+            </label>
+            <span className="seg">
+              <button className={tool === 'note' ? 'on' : ''} onClick={() => setTool('note')}>
+                音符
+              </button>
+              <button className={tool === 'select' ? 'on' : ''} onClick={() => setTool('select')}>
+                範囲選択
+              </button>
+            </span>
+            {tool === 'select' && (
+              <span className="undo">
+                <button onClick={copy} disabled={!selection} title="コピー (Ctrl+C)">
+                  コピー
+                </button>
+                <button onClick={cut} disabled={!selection} title="切り取り (Ctrl+X)">
+                  切り取り
+                </button>
+                <button onClick={paste} disabled={!selection || !clip} title="選択範囲の先頭に貼り付け (Ctrl+V)">
+                  貼り付け
+                </button>
+                <button onClick={removeSelected} disabled={!selection} title="削除 (Delete)">
+                  削除
+                </button>
+              </span>
+            )}
             <span className="undo">
               <button onClick={undo} disabled={!hist.past.length} title="元に戻す (Ctrl+Z)">
                 ↶
@@ -390,7 +481,14 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
           )}
           （小節番号の行をクリックで変更 / スペースキーで再生・停止）
         </span>
-        {editing && <span className="hint">マスをクリックで音符、ドラッグで響かせる長さ、音符クリックで削除</span>}
+        {editing && tool === 'note' && (
+          <span className="hint">マスをクリックで音符、ドラッグで響かせる長さ、音符クリックで削除</span>
+        )}
+        {selecting && (
+          <span className="hint">
+            ドラッグで範囲を選択。貼り付けは選択範囲の先頭の拍に、元と同じ音名で入ります
+          </span>
+        )}
         {hidden > 0 && <span className="warn">音域外・範囲外の音符 {hidden} 個は非表示です</span>}
       </div>
 
@@ -409,6 +507,9 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
             onAssign={onAssign}
             onPreview={preview}
             onSetStart={setStartStep}
+            tool={selecting ? 'select' : 'note'}
+            selection={selecting ? selection : null}
+            onSelect={setSelection}
           />
         </div>
         <PlayerPanel

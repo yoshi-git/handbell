@@ -1,6 +1,15 @@
 import { memo, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
-import { displayName, isBlackKey, type Accidental } from '../model/pitch';
-import { addNote, noteAt, removeNote, rows, setNoteLength, stepsPerMeasure, totalSteps } from '../model/song';
+import { displayName, fromMidi, isBlackKey, toMidi, type Accidental } from '../model/pitch';
+import {
+  addNote,
+  noteAt,
+  removeNote,
+  rows,
+  setNoteLength,
+  stepsPerMeasure,
+  totalSteps,
+  type Selection,
+} from '../model/song';
 import type { Note, NoteName, Song } from '../model/types';
 import { playerColor } from '../util/colors';
 
@@ -22,6 +31,10 @@ export interface ScoreGridProps {
   onAssign?: (pitch: NoteName, player: string) => void;
   onPreview?: (pitch: NoteName) => void;
   onSetStart?: (step: number) => void;
+  /** 'select' makes dragging on the lanes select an area instead of writing notes. */
+  tool?: 'note' | 'select';
+  selection?: Selection | null;
+  onSelect?: (sel: Selection | null) => void;
 }
 
 const PLAYER_W = 112;
@@ -30,7 +43,7 @@ const NOTE_W = 52;
 export function ScoreGrid(props: ScoreGridProps) {
   const { song, stepWidth, fromStep = 0, toStep = totalSteps(song) } = props;
   // Rows only need stable props; per-step data is passed as `active`.
-  const { activePitches, playheadRef, ...rowProps } = props;
+  const { activePitches, playheadRef, selection, ...rowProps } = props;
   const spm = stepsPerMeasure(song);
   const steps = toStep - fromStep;
 
@@ -109,6 +122,7 @@ export function ScoreGrid(props: ScoreGridProps) {
           songRef={songRef}
         />
       ))}
+      {selection && <SelectionBox song={song} sel={selection} fromStep={fromStep} toStep={toStep} stepWidth={stepWidth} />}
       {playheadRef && (
         <div
           className="playhead"
@@ -120,7 +134,26 @@ export function ScoreGrid(props: ScoreGridProps) {
   );
 }
 
-interface RowProps extends Omit<ScoreGridProps, 'activePitches' | 'playheadRef'> {
+function SelectionBox(p: { song: Song; sel: Selection; fromStep: number; toStep: number; stepWidth: number }) {
+  const top = toMidi(p.song.range.high) - toMidi(p.sel.high);
+  const count = toMidi(p.sel.high) - toMidi(p.sel.low) + 1;
+  const from = Math.max(p.sel.from, p.fromStep);
+  const to = Math.min(p.sel.to, p.toStep);
+  if (to <= from) return null;
+  return (
+    <div
+      className="selection-box"
+      style={{
+        left: PLAYER_W + NOTE_W + (from - p.fromStep) * p.stepWidth,
+        width: (to - from) * p.stepWidth,
+        top: `calc(var(--row-h) * ${top + 1})`,
+        height: `calc(var(--row-h) * ${count})`,
+      }}
+    />
+  );
+}
+
+interface RowProps extends Omit<ScoreGridProps, 'activePitches' | 'playheadRef' | 'selection'> {
   pitch: NoteName;
   player: string | undefined;
   color: string;
@@ -132,14 +165,35 @@ interface RowProps extends Omit<ScoreGridProps, 'activePitches' | 'playheadRef'>
 }
 
 type Drag = { pitch: NoteName; step: number; moved: boolean; existing: boolean; pushed: boolean };
+type Anchor = { midi: number; step: number };
 
 const GridRow = memo(function GridRow(p: RowProps) {
   const drag = useRef<Drag | null>(null);
+  const anchor = useRef<Anchor | null>(null);
 
   const stepAt = (e: PointerEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     return p.fromStep + Math.floor((e.clientX - rect.left) / p.stepWidth);
   };
+
+  /** Pitch and step under the pointer, clamped to the score (the pointer may leave this row while dragging). */
+  const cellAt = (e: PointerEvent<HTMLDivElement>): Anchor => {
+    const song = p.songRef.current;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const midi = toMidi(p.pitch) - Math.floor((e.clientY - rect.top) / rect.height);
+    return {
+      midi: Math.max(toMidi(song.range.low), Math.min(toMidi(song.range.high), midi)),
+      step: Math.max(0, Math.min(totalSteps(song) - 1, stepAt(e))),
+    };
+  };
+
+  const select = (a: Anchor, b: Anchor) =>
+    p.onSelect?.({
+      low: fromMidi(Math.min(a.midi, b.midi)),
+      high: fromMidi(Math.max(a.midi, b.midi)),
+      from: Math.min(a.step, b.step),
+      to: Math.max(a.step, b.step) + 1,
+    });
 
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (p.readOnly || !p.onChange || e.button !== 0) return;
@@ -147,6 +201,11 @@ const GridRow = memo(function GridRow(p: RowProps) {
     const step = stepAt(e);
     if (step < 0 || step >= totalSteps(song)) return;
     e.currentTarget.setPointerCapture(e.pointerId);
+    if (p.tool === 'select') {
+      anchor.current = cellAt(e);
+      select(anchor.current, anchor.current);
+      return;
+    }
     const hit = noteAt(song, p.pitch, step);
     if (hit) {
       drag.current = { pitch: p.pitch, step: hit.step, moved: false, existing: true, pushed: false };
@@ -158,6 +217,10 @@ const GridRow = memo(function GridRow(p: RowProps) {
   };
 
   const onPointerMove = (e: PointerEvent<HTMLDivElement>) => {
+    if (anchor.current) {
+      select(anchor.current, cellAt(e));
+      return;
+    }
     const d = drag.current;
     if (!d || !p.onChange) return;
     const song = p.songRef.current;
@@ -173,6 +236,7 @@ const GridRow = memo(function GridRow(p: RowProps) {
   };
 
   const onPointerUp = () => {
+    anchor.current = null;
     const d = drag.current;
     drag.current = null;
     if (!d || !p.onChange) return;

@@ -163,6 +163,11 @@ input[type='number'] { width: 64px; }
 .grid-row.active .cell-player, .grid-row.active .cell-note { background: var(--active); }
 .grid-row.active .cell-note { transform: scale(1.08); }
 
+.selection-box {
+  position: absolute; z-index: 1; pointer-events: none; border-radius: 2px;
+  border: 2px dashed var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
 .playhead {
   position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px;
   background: var(--accent); z-index: 1; pointer-events: none; will-change: transform;
