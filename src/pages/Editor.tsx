@@ -21,6 +21,7 @@ import {
   type Clip,
   type Selection,
 } from '../model/song';
+import { songToMusicXml } from '../model/musicxml';
 import { encodeForUrl, songToJson } from '../model/serialize';
 import type { NoteName, Song } from '../model/types';
 import { saveSong } from '../storage/localSongs';
@@ -293,6 +294,14 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
         )}
         <button onClick={() => downloadText(`${safeFilename(song.title)}.bellscore.json`, songToJson(song))}>
           JSON書き出し
+        </button>
+        <button
+          onClick={() =>
+            downloadText(`${safeFilename(song.title)}.musicxml`, songToMusicXml(song), 'application/vnd.recordare.musicxml+xml')
+          }
+          title="楽譜ソフト（MuseScore など）で開ける形式。担当者名は楽譜には表示されません"
+        >
+          MusicXML書き出し
         </button>
         <button onClick={share}>共有URL</button>
         <button onClick={() => window.print()}>印刷</button>

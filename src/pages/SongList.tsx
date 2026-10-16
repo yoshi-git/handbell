@@ -1,19 +1,34 @@
 import { useRef, useState } from 'react';
 import { createSong, newId, players } from '../model/song';
+import { songFromMusicXml } from '../model/musicxml';
 import { songFromJson, songToJson } from '../model/serialize';
 import type { Song } from '../model/types';
 import { SAMPLES } from '../samples';
 import { deleteSong, listSongs, saveSong } from '../storage/localSongs';
 import { downloadText, safeFilename } from '../util/file';
+import { decodeXmlBytes, readMxl } from '../util/zip';
 
 function summary(song: Song): string {
   const n = players(song).length;
   return `${song.measures}小節・♩=${song.tempo}・${song.range.low}〜${song.range.high}${n ? `・${n}人` : ''}`;
 }
 
+/** Reads a song from JSON or MusicXML, chosen by file extension. */
+async function readSongFile(file: File, onWarnings: (warnings: string[]) => void): Promise<Song> {
+  const name = file.name.toLowerCase();
+  if (name.endsWith('.json')) return songFromJson(await file.text());
+  const xml = name.endsWith('.mxl')
+    ? await readMxl(await file.arrayBuffer())
+    : decodeXmlBytes(new Uint8Array(await file.arrayBuffer()));
+  const { song, warnings } = songFromMusicXml(xml);
+  if (warnings.length) onWarnings(warnings);
+  return song;
+}
+
 export function SongList() {
   const [songs, setSongs] = useState(listSongs);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const refresh = () => setSongs(listSongs());
@@ -27,9 +42,10 @@ export function SongList() {
   const importFiles = async (files: FileList | null) => {
     if (!files) return;
     setError(null);
+    setNotice(null);
     for (const file of Array.from(files)) {
       try {
-        const song = songFromJson(await file.text());
+        const song = await readSongFile(file, (warnings) => setNotice(`${file.name}: ${warnings.join(' ')}`));
         // Keep the existing copy if the same id is already saved.
         if (listSongs().some((s) => s.id === song.id)) song.id = newId();
         saveSong(song);
@@ -59,11 +75,13 @@ export function SongList() {
           <button className="primary" onClick={create}>
             ＋ 新しい曲
           </button>
-          <button onClick={() => fileRef.current?.click()}>JSONを読み込む</button>
+          <button onClick={() => fileRef.current?.click()} title="JSON・MusicXML (.musicxml / .xml / .mxl)">
+            ファイルを読み込む
+          </button>
           <input
             ref={fileRef}
             type="file"
-            accept=".json,application/json"
+            accept=".json,.musicxml,.xml,.mxl,application/json,application/vnd.recordare.musicxml+xml,application/vnd.recordare.musicxml"
             multiple
             hidden
             onChange={(e) => {
@@ -74,6 +92,7 @@ export function SongList() {
         </div>
       </header>
       {error && <p className="warn">{error}</p>}
+      {notice && <p className="hint">{notice}</p>}
 
       <section>
         <h2>マイ曲</h2>
