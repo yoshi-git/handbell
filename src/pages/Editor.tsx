@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Player } from '../audio/scheduler';
-import { PlayerPanel, UNASSIGNED } from '../components/PlayerPanel';
 import { ScoreGrid } from '../components/ScoreGrid';
 import { SELECTABLE_NOTES, displayName, toMidi, type Accidental } from '../model/pitch';
 import {
@@ -41,6 +40,8 @@ const SUBDIVISION_OPTIONS = [
   { value: 2, label: '8分音符' },
   { value: 3, label: '3連符' },
   { value: 4, label: '16分音符' },
+  { value: 6, label: '8分＋3連符' },
+  { value: 12, label: '16分＋3連符' },
 ];
 
 /** Shared across editors so an area can be copied from one song into another. */
@@ -70,6 +71,8 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   const [accidental, setAccidental] = useState<Accidental>(() => loadPref('bellscore.accidental', 'sharp'));
   const [stepWidth, setStepWidth] = useState(() => Number(loadPref('bellscore.zoom', '24')) || 24);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
+  /** Phones: settings and file actions stay folded away until the ⋯ button is pressed. */
+  const [menuOpen, setMenuOpen] = useState(false);
   const [tool, setTool] = useState<'note' | 'select'>('note');
   const [selection, setSelection] = useState<Selection | null>(null);
   const [clip, setClip] = useState<Clip | null>(clipboard);
@@ -109,20 +112,12 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   if (!player.current) player.current = new Player();
   const [playing, setPlaying] = useState(false);
   const [loop, setLoop] = useState(false);
+  // Rhythm-game style: the playhead stays put and the score flows past it.
+  const [flow, setFlow] = useState(() => loadPref('bellscore.flow', '1') === '1');
   const [startStep, setStartStep] = useState(0);
   const [activeStep, setActiveStep] = useState<number | null>(null);
-  const [muted, setMuted] = useState<Set<string>>(new Set());
-  const [solo, setSolo] = useState<Set<string>>(new Set());
-  const mixRef = useRef({ muted, solo, assignments: song.assignments });
-  mixRef.current = { muted, solo, assignments: song.assignments };
   const playheadRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const audible = useCallback((pitch: NoteName) => {
-    const { muted, solo, assignments } = mixRef.current;
-    const who = assignments[pitch] ?? UNASSIGNED;
-    return solo.size ? solo.has(who) : !muted.has(who);
-  }, []);
 
   const hidePlayhead = () => {
     if (playheadRef.current) playheadRef.current.style.display = 'none';
@@ -142,7 +137,6 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
     void player.current!.start(song, {
       fromStep: from,
       loop,
-      audible,
       onStep: setActiveStep,
       onPosition: (pos) => {
         const el = playheadRef.current;
@@ -153,7 +147,10 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
         // Keep the playhead in view (the label columns are sticky on the left).
         const x = el.offsetLeft + pos * stepWidth;
         const labels = el.offsetLeft;
-        if (x > box.scrollLeft + box.clientWidth - 80 || x < box.scrollLeft + labels) {
+        if (flow) {
+          // Hold the playhead at 30% of the visible lanes and scroll the score under it.
+          box.scrollLeft = Math.max(0, x - labels - (box.clientWidth - labels) * 0.3);
+        } else if (x > box.scrollLeft + box.clientWidth - 80 || x < box.scrollLeft + labels) {
           box.scrollLeft = Math.max(0, x - labels - 40);
         }
       },
@@ -163,7 +160,7 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
         hidePlayhead();
       },
     });
-  }, [song, startStep, loop, audible, stepWidth]);
+  }, [song, startStep, loop, flow, stepWidth]);
 
   useEffect(() => {
     player.current!.update(song);
@@ -179,17 +176,6 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
     for (const n of song.notes) if (n.step === activeStep) set.add(n.pitch);
     return set;
   }, [activeStep, song.notes]);
-  const activePlayers = useMemo(
-    () => new Set([...activePitches].map((p) => song.assignments[p] ?? UNASSIGNED)),
-    [activePitches, song.assignments],
-  );
-
-  const toggleIn = (set: Set<string>, name: string) => {
-    const next = new Set(set);
-    if (next.has(name)) next.delete(name);
-    else next.add(name);
-    return next;
-  };
 
   // ---- area editing ----
   const selecting = !readOnly && mode === 'edit' && tool === 'select';
@@ -265,10 +251,10 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   const spm = stepsPerMeasure(song);
 
   return (
-    <div className="editor">
+    <div className={`editor${menuOpen ? ' menu-open' : ''}`}>
       <header className="topbar no-print">
-        <a href="#/" className="back" onClick={stop}>
-          ← 一覧
+        <a href="#/" className="back" onClick={stop} title="一覧へ">
+          ← <span className="label">一覧</span>
         </a>
         {readOnly ? (
           <h1 className="title-static">{song.title}</h1>
@@ -292,19 +278,29 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
             </button>
           </div>
         )}
-        <button onClick={() => downloadText(`${safeFilename(song.title)}.bellscore.json`, songToJson(song))}>
-          JSON書き出し
-        </button>
         <button
-          onClick={() =>
-            downloadText(`${safeFilename(song.title)}.musicxml`, songToMusicXml(song), 'application/vnd.recordare.musicxml+xml')
-          }
-          title="楽譜ソフト（MuseScore など）で開ける形式。担当者名は楽譜には表示されません"
+          className={`menu-toggle${menuOpen ? ' on' : ''}`}
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-expanded={menuOpen}
+          aria-label="設定と書き出し"
         >
-          MusicXML書き出し
+          ⋯
         </button>
-        <button onClick={share}>共有URL</button>
-        <button onClick={() => window.print()}>印刷</button>
+        <div className="actions">
+          <button onClick={() => downloadText(`${safeFilename(song.title)}.bellscore.json`, songToJson(song))}>
+            JSON書き出し
+          </button>
+          <button
+            onClick={() =>
+              downloadText(`${safeFilename(song.title)}.musicxml`, songToMusicXml(song), 'application/vnd.recordare.musicxml+xml')
+            }
+            title="楽譜ソフト（MuseScore など）で開ける形式。担当者名は楽譜には表示されません"
+          >
+            MusicXML書き出し
+          </button>
+          <button onClick={share}>共有URL</button>
+          <button onClick={() => window.print()}>印刷</button>
+        </div>
       </header>
 
       {readOnly && (
@@ -481,6 +477,18 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
           <input type="checkbox" checked={loop} onChange={(e) => setLoop(e.target.checked)} disabled={playing} />
           ループ
         </label>
+        <label title="再生位置を固定して、譜面のほうを流します">
+          <input
+            type="checkbox"
+            checked={flow}
+            onChange={(e) => {
+              setFlow(e.target.checked);
+              savePref('bellscore.flow', e.target.checked ? '1' : '0');
+            }}
+            disabled={playing}
+          />
+          譜面を流す
+        </label>
         <span className="hint">
           開始位置: {Math.floor(startStep / spm) + 1}小節目
           {startStep > 0 && (
@@ -502,7 +510,7 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
       </div>
 
       <div className="workspace">
-        <div className="grid-scroll" ref={scrollRef}>
+        <div className={`grid-scroll${playing && flow ? ' flowing' : ''}`} ref={scrollRef}>
           <ScoreGrid
             song={song}
             players={players}
@@ -519,19 +527,9 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
             tool={selecting ? 'select' : 'note'}
             selection={selecting ? selection : null}
             onSelect={setSelection}
+            showCounts
           />
         </div>
-        <PlayerPanel
-          song={song}
-          players={players}
-          accidental={accidental}
-          activePlayers={activePlayers}
-          showMix={mode === 'play'}
-          muted={muted}
-          solo={solo}
-          onToggleMute={(n) => setMuted((s) => toggleIn(s, n))}
-          onToggleSolo={(n) => setSolo((s) => toggleIn(s, n))}
-        />
       </div>
 
       <PrintView song={song} players={players} accidental={accidental} />
@@ -578,7 +576,8 @@ function ShareDialog({ url, onClose }: { url: string; onClose: () => void }) {
 /** Printable layout: the score split into lines of whole measures. */
 function PrintView({ song, players, accidental }: { song: Song; players: string[]; accidental: Accidental }) {
   const spm = stepsPerMeasure(song);
-  const stepWidth = 12;
+  // Narrower steps on fine grids so a line still holds a few measures.
+  const stepWidth = Math.min(12, Math.round(48 / song.subdivisions));
   const measuresPerLine = Math.max(1, Math.floor(860 / (spm * stepWidth)));
   const lines = [];
   for (let m = 0; m < song.measures; m += measuresPerLine) {

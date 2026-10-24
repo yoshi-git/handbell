@@ -1,4 +1,4 @@
-import { memo, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
+import { memo, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
 import { displayName, fromMidi, isBlackKey, toMidi, type Accidental } from '../model/pitch';
 import {
   addNote,
@@ -7,6 +7,7 @@ import {
   rows,
   setNoteLength,
   stepsPerMeasure,
+  strikeCounts,
   totalSteps,
   type Selection,
 } from '../model/song';
@@ -35,10 +36,24 @@ export interface ScoreGridProps {
   tool?: 'note' | 'select';
   selection?: Selection | null;
   onSelect?: (sel: Selection | null) => void;
+  /** Show how many times each bell is struck, at the right edge. */
+  showCounts?: boolean;
 }
 
-const PLAYER_W = 112;
-const NOTE_W = 52;
+/** Widths of the sticky label columns: [player, note name]. Narrower on phones. */
+const LABEL_W = { normal: [112, 52], compact: [60, 40] } as const;
+const COMPACT_QUERY = '(max-width: 720px)';
+
+function useCompact(): boolean {
+  const [compact, setCompact] = useState(() => typeof matchMedia !== 'undefined' && matchMedia(COMPACT_QUERY).matches);
+  useEffect(() => {
+    const mq = matchMedia(COMPACT_QUERY);
+    const update = () => setCompact(mq.matches);
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+  return compact;
+}
 
 export function ScoreGrid(props: ScoreGridProps) {
   const { song, stepWidth, fromStep = 0, toStep = totalSteps(song) } = props;
@@ -46,6 +61,7 @@ export function ScoreGrid(props: ScoreGridProps) {
   const { activePitches, playheadRef, selection, ...rowProps } = props;
   const spm = stepsPerMeasure(song);
   const steps = toStep - fromStep;
+  const [playerW, noteW] = LABEL_W[useCompact() ? 'compact' : 'normal'];
 
   const byPitch = useMemo(() => {
     const map = new Map<NoteName, Note[]>();
@@ -57,6 +73,8 @@ export function ScoreGrid(props: ScoreGridProps) {
     }
     return map;
   }, [song.notes, fromStep, toStep]);
+
+  const counts = useMemo(() => (props.showCounts ? strikeCounts(song) : null), [props.showCounts, song]);
 
   // Latest song for pointer handlers that outlive a render.
   const songRef = useRef(song);
@@ -89,7 +107,7 @@ export function ScoreGrid(props: ScoreGridProps) {
   return (
     <div
       className="score-grid"
-      style={{ ['--player-w' as string]: `${PLAYER_W}px`, ['--note-w' as string]: `${NOTE_W}px` }}
+      style={{ ['--player-w' as string]: `${playerW}px`, ['--note-w' as string]: `${noteW}px` }}
     >
       <div className="grid-row grid-header">
         <div className="cell-player">担当</div>
@@ -107,6 +125,7 @@ export function ScoreGrid(props: ScoreGridProps) {
             </span>
           )}
         </div>
+        {counts && <div className="cell-count">回数</div>}
       </div>
       {rows(song).map((pitch) => (
         <GridRow
@@ -116,25 +135,26 @@ export function ScoreGrid(props: ScoreGridProps) {
           color={playerColor(props.players, song.assignments[pitch])}
           notes={byPitch.get(pitch)}
           active={activePitches?.has(pitch) ?? false}
+          count={counts ? counts.get(pitch) ?? 0 : undefined}
           laneStyle={laneStyle}
           {...rowProps}
           fromStep={fromStep}
           songRef={songRef}
         />
       ))}
-      {selection && <SelectionBox song={song} sel={selection} fromStep={fromStep} toStep={toStep} stepWidth={stepWidth} />}
+      {selection && <SelectionBox song={song} sel={selection} fromStep={fromStep} toStep={toStep} stepWidth={stepWidth} left={playerW + noteW} />}
       {playheadRef && (
         <div
           className="playhead"
           ref={playheadRef}
-          style={{ left: PLAYER_W + NOTE_W, display: 'none' }}
+          style={{ left: playerW + noteW, display: 'none' }}
         />
       )}
     </div>
   );
 }
 
-function SelectionBox(p: { song: Song; sel: Selection; fromStep: number; toStep: number; stepWidth: number }) {
+function SelectionBox(p: { song: Song; sel: Selection; fromStep: number; toStep: number; stepWidth: number; left: number }) {
   const top = toMidi(p.song.range.high) - toMidi(p.sel.high);
   const count = toMidi(p.sel.high) - toMidi(p.sel.low) + 1;
   const from = Math.max(p.sel.from, p.fromStep);
@@ -144,7 +164,7 @@ function SelectionBox(p: { song: Song; sel: Selection; fromStep: number; toStep:
     <div
       className="selection-box"
       style={{
-        left: PLAYER_W + NOTE_W + (from - p.fromStep) * p.stepWidth,
+        left: p.left + (from - p.fromStep) * p.stepWidth,
         width: (to - from) * p.stepWidth,
         top: `calc(var(--row-h) * ${top + 1})`,
         height: `calc(var(--row-h) * ${count})`,
@@ -159,6 +179,8 @@ interface RowProps extends Omit<ScoreGridProps, 'activePitches' | 'playheadRef' 
   color: string;
   notes: Note[] | undefined;
   active: boolean;
+  /** Strikes of this bell in the song; undefined hides the column. */
+  count: number | undefined;
   laneStyle: CSSProperties;
   fromStep: number;
   songRef: React.MutableRefObject<Song>;
@@ -290,6 +312,7 @@ const GridRow = memo(function GridRow(p: RowProps) {
           );
         })}
       </div>
+      {p.count !== undefined && <div className="cell-count">{p.count || ''}</div>}
     </div>
   );
 });

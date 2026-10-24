@@ -6,8 +6,6 @@ import { strikeBell } from './bell';
 export interface PlayOptions {
   fromStep: number;
   loop: boolean;
-  /** Return false to skip a bell (mute / solo). */
-  audible: (pitch: NoteName) => boolean;
   onStep: (step: number) => void;
   /** Called every animation frame with the fractional step position (for the playhead). */
   onPosition?: (pos: number) => void;
@@ -38,8 +36,8 @@ export class Player {
     return 60 / this.song!.tempo / this.song!.subdivisions;
   }
 
-  /** Swap song data (e.g. tempo or mute changes) without restarting. */
-  update(song: Song, audible?: PlayOptions['audible']): void {
+  /** Swap song data (e.g. tempo changes) without restarting. */
+  update(song: Song): void {
     if (!this.playing || !this.song || !this.ctx) {
       this.song = song;
       return;
@@ -54,7 +52,6 @@ export class Player {
     } else {
       this.song = song;
     }
-    if (audible && this.opts) this.opts.audible = audible;
   }
 
   async start(song: Song, opts: PlayOptions): Promise<void> {
@@ -139,7 +136,7 @@ export class Player {
       const t = this.timeOf(this.nextStep);
       const dur = this.stepDur();
       for (const n of song.notes) {
-        if (n.step === this.nextStep && opts.audible(n.pitch)) {
+        if (n.step === this.nextStep) {
           strikeBell(ctx, this.master!, frequency(n.pitch), t, n.length * dur);
         }
       }

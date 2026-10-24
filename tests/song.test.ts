@@ -13,6 +13,7 @@ import {
   setAssignment,
   setNoteLength,
   setSubdivisions,
+  strikeCounts,
   transpose,
 } from '../src/model/song';
 
@@ -141,5 +142,14 @@ describe('song', () => {
       ['4C', 0],
       ['4D', 4],
     ]);
+  });
+
+  it('counts strikes per bell within the song length', () => {
+    let s = { ...createSong(), measures: 1 }; // 8 steps
+    s = addNote(s, '4C', 0);
+    s = addNote(s, '4C', 4);
+    s = addNote(s, '4D', 2, 4);
+    s = { ...s, notes: [...s.notes, { pitch: '4E', step: 8, length: 1 }] }; // past the last measure
+    expect(Object.fromEntries(strikeCounts(s))).toEqual({ '4C': 2, '4D': 1 });
   });
 });

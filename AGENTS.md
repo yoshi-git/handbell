@@ -5,7 +5,7 @@
 
 - `src/model/`: データモデルと純粋関数。`types.ts`（`Song` 型）、`pitch.ts`（音名⇔MIDI変換）、`song.ts`（音符の追加・削除・長さ変更など）、`serialize.ts`（JSON・共有URLの変換と入力検証）
 - `src/audio/`: Web Audio。`bell.ts` はベル音の合成、`scheduler.ts` は先読み方式の再生スケジューラ（`Player`）
-- `src/components/`: `ScoreGrid.tsx`（音名グリッド。編集時のポインタ操作もここ）、`PlayerPanel.tsx`（担当者一覧とミュート/ソロ）
+- `src/components/`: `ScoreGrid.tsx`（音名グリッド。担当者名・音名・右端の出現回数の列と、編集時のポインタ操作もここ）
 - `src/pages/`: `SongList.tsx`（一覧）、`Editor.tsx`（編集・試奏・共有・印刷、Undo 履歴）
 - `src/storage/localSongs.ts`: localStorage 保存（キー `bellscore.songs`）
 - `src/samples/`: `*.bellscore.json` を置くと `import.meta.glob` で自動的にサンプル曲として同梱されます

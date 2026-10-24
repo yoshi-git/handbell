@@ -46,6 +46,14 @@ export function hiddenNoteCount(song: Song): number {
   return song.notes.filter((n) => !inRange(song, n.pitch) || n.step >= end).length;
 }
 
+/** How many times each bell is struck within the song's length. */
+export function strikeCounts(song: Song): Map<NoteName, number> {
+  const end = totalSteps(song);
+  const counts = new Map<NoteName, number>();
+  for (const n of song.notes) if (n.step < end) counts.set(n.pitch, (counts.get(n.pitch) ?? 0) + 1);
+  return counts;
+}
+
 export function noteAt(song: Song, pitch: NoteName, step: number): Note | undefined {
   return song.notes.find((n) => n.pitch === pitch && step >= n.step && step < n.step + n.length);
 }
