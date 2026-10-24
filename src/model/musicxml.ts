@@ -43,20 +43,28 @@ const NOTE_TYPES: [string, number][] = [
   ['32nd', 0.125],
 ];
 
-/** Splits a duration (in steps) into notes that can each be written with one symbol. */
+/**
+ * Splits a duration (in steps) into notes that can each be written with one symbol.
+ * On grids that divide the beat by 3 (3, 6, 12), durations plain notes can't add up to
+ * are written with triplets.
+ */
 export function splitDuration(steps: number, subdivisions: number): Piece[] {
-  const candidates: Piece[] = [];
+  const plain: Piece[] = [];
   for (const [type, quarters] of NOTE_TYPES) {
     for (const dots of [1, 0]) {
       const s = quarters * subdivisions * (dots ? 1.5 : 1);
-      if (Number.isInteger(s)) candidates.push({ steps: s, type, dots, triplet: false });
+      if (Number.isInteger(s)) plain.push({ steps: s, type, dots, triplet: false });
     }
   }
-  if (subdivisions === 3) {
-    candidates.push({ steps: 2, type: 'quarter', dots: 0, triplet: true });
-    candidates.push({ steps: 1, type: 'eighth', dots: 0, triplet: true });
+  const triplets: Piece[] = [];
+  if (subdivisions % 3 === 0) {
+    for (const [type, quarters] of NOTE_TYPES.slice(2)) {
+      const s = (quarters * subdivisions * 2) / 3;
+      if (Number.isInteger(s)) triplets.push({ steps: s, type, dots: 0, triplet: true });
+    }
   }
-  candidates.sort((a, b) => b.steps - a.steps);
+  const unit = Math.min(...plain.map((p) => p.steps));
+  const candidates = (steps % unit === 0 ? plain : [...plain, ...triplets]).sort((a, b) => b.steps - a.steps);
   const out: Piece[] = [];
   let rest = steps;
   while (rest > 0) {
@@ -250,6 +258,48 @@ function fail(msg: string): never {
   throw new Error(`MusicXML を読み込めません: ${msg}`);
 }
 
+/**
+ * The order measures are played in, with repeats and 1st/2nd endings expanded.
+ * Repeat signs nest only one level, as in most scores.
+ */
+export function playOrder(measures: XmlElement[]): number[] {
+  const barlines = measures.map((m) => children(m, 'barline'));
+  const endingNumbers = (i: number): number[] | undefined => {
+    for (const b of barlines[i]) {
+      const e = child(b, 'ending');
+      if (e && e.attrs.type === 'start') {
+        return (e.attrs.number ?? '').split(/[,\s]+/).map(Number).filter((n) => n > 0);
+      }
+    }
+    return undefined;
+  };
+  const order: number[] = [];
+  let start = 0;
+  let pass = 1;
+  let ending: number[] | undefined;
+  for (let i = 0; i < measures.length; i++) {
+    if (barlines[i].some((b) => child(b, 'repeat')?.attrs.direction === 'forward') && i !== start) {
+      start = i;
+      pass = 1;
+    }
+    ending = endingNumbers(i) ?? ending;
+    const skip = ending !== undefined && !ending.includes(pass);
+    if (!skip) order.push(i);
+    if (barlines[i].some((b) => child(b, 'ending')?.attrs.type?.match(/stop|discontinue/))) ending = undefined;
+    const back = barlines[i].map((b) => child(b, 'repeat')).find((r) => r?.attrs.direction === 'backward');
+    const times = Number(back?.attrs.times) || 2;
+    if (back && !skip && pass < times && order.length < 10000) {
+      pass++;
+      ending = undefined;
+      i = start - 1;
+    } else if (back && !skip) {
+      start = i + 1;
+      pass = 1;
+    }
+  }
+  return order;
+}
+
 export function songFromMusicXml(text: string): MusicXmlImport {
   const doc = parseXml(text);
   if (child(doc, 'score-timewise')) fail('score-timewise 形式には対応していません');
@@ -274,7 +324,9 @@ export function songFromMusicXml(text: string): MusicXmlImport {
     let chromatic = 0;
     let measureStart = 0; // quarters
     const open = new Map<number, RawNote>();
-    children(part, 'measure').forEach((measure, mi) => {
+    const measures = children(part, 'measure');
+    playOrder(measures).forEach((index, mi) => {
+      const measure = measures[index];
       let cursor = 0; // divisions from the measure start
       let maxCursor = 0;
       let lastStart = 0;
@@ -334,8 +386,9 @@ export function songFromMusicXml(text: string): MusicXmlImport {
             note = { midi, start: q(start), dur: dur / divisions };
             raw.push(note);
           }
+          // Only the note that ends a tie closes it: the same pitch in another voice must not.
           if (ties.includes('start')) open.set(midi, note);
-          else open.delete(midi);
+          else if (ties.includes('stop')) open.delete(midi);
         }
       }
       const len = maxCursor / divisions;
@@ -363,12 +416,15 @@ export function songFromMusicXml(text: string): MusicXmlImport {
   if (dropped) warnings.push(`扱えない音域・長さの音符 ${dropped} 個を除きました（対応音域は 1C〜7C）。`);
   if (skippedGrace) warnings.push(`装飾音符 ${skippedGrace} 個を除きました。`);
 
-  // Grid: the one saved by this app if it fits, else the coarsest of 8th / 16th / triplet that fits.
+  // Grid: the one saved by this app if it fits, else the coarsest that fits.
   const fits = (s: number) => inSet.every((n) => isNearInt((n.start + shift) * s) && isNearInt(n.dur * s));
   const saved = Number(misc.get('subdivisions'));
-  const sub = [saved, 2, 4, 3].find((s) => [1, 2, 3, 4].includes(s) && fits(s)) ?? 4;
+  // If none fits, take the grid that keeps the onsets closest (the coarser one on a tie).
+  const error = (s: number) => Math.max(0, ...inSet.map((n) => Math.abs((n.start + shift) * s - Math.round((n.start + shift) * s)) / s));
+  const sub = [saved, 2, 4, 3, 6, 12].find((s) => [1, 2, 3, 4, 6, 12].includes(s) && fits(s))
+    ?? [4, 6, 12].reduce((best, s) => (error(s) < error(best) - EPS ? s : best));
   if (!fits(sub)) {
-    warnings.push('16分音符より細かいリズムや3連符との混在があるため、一部の音符の位置・長さを丸めました。');
+    warnings.push('16分音符より細かいリズムがあるため、一部の音符の位置・長さを丸めました。');
   }
 
   // Quantize, then make sure notes on the same bell don't overlap.

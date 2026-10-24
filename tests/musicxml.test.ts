@@ -1,11 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { songFromMusicXml, songToMusicXml, splitDuration } from '../src/model/musicxml';
+import { playOrder, songFromMusicXml, songToMusicXml, splitDuration } from '../src/model/musicxml';
 import { parseSong } from '../src/model/serialize';
 import { addNote, createSong, setAssignment } from '../src/model/song';
 import { parseXml } from '../src/model/xml';
 import { readMxl } from '../src/util/zip';
-import ahnw from '../src/samples/ahnw.bellscore.json';
-import arranged from '../src/samples/ahnw-arranged.bellscore.json';
 import twinkle from '../src/samples/twinkle.bellscore.json';
 
 async function deflateRaw(bytes: Uint8Array): Promise<Uint8Array> {
@@ -41,6 +39,9 @@ describe('musicxml', () => {
       ['quarter', false],
       ['eighth', true],
     ]);
+    expect(splitDuration(4, 6).map((p) => [p.type, p.triplet])).toEqual([['quarter', true]]);
+    expect(splitDuration(9, 6).map((p) => [p.type, p.dots, p.triplet])).toEqual([['quarter', 1, false]]);
+    expect(splitDuration(1, 12).map((p) => [p.type, p.triplet])).toEqual([['32nd', true]]);
   });
 
   it('writes well-formed MusicXML', () => {
@@ -52,10 +53,21 @@ describe('musicxml', () => {
   });
 
   it('round-trips through MusicXML', () => {
-    for (const s of [sample(), parseSong(twinkle), parseSong(ahnw), parseSong(arranged)]) {
+    for (const s of [sample(), parseSong(twinkle)]) {
       const { song, warnings } = songFromMusicXml(songToMusicXml(s));
       expect(warnings).toEqual([]);
       expect(comparable(song)).toEqual(comparable(s));
+    }
+  });
+
+  it('round-trips every bundled sample song', () => {
+    // Includes a tie across a barline next to an untied note of the same pitch in another voice.
+    const files = import.meta.glob('../src/samples/*.bellscore.json', { eager: true, import: 'default' });
+    for (const [path, data] of Object.entries(files)) {
+      const s = parseSong(data);
+      const { song, warnings } = songFromMusicXml(songToMusicXml(s));
+      expect(warnings, path).toEqual([]);
+      expect(comparable(song), path).toEqual(comparable(s));
     }
   });
 
@@ -65,6 +77,25 @@ describe('musicxml', () => {
     s = addNote(s, '4D', 1, 4);
     s = addNote(s, '4E', 5, 7);
     expect(comparable(songFromMusicXml(songToMusicXml(s)).song)).toEqual(comparable(s));
+  });
+
+  it('round-trips triplets mixed with eighths and 16ths', () => {
+    for (const subdivisions of [6, 12]) {
+      let s = { ...createSong('三連'), subdivisions, measures: 1 };
+      const u = subdivisions / 6;
+      s = addNote(s, '4C', 0, 3 * u); // eighth
+      s = addNote(s, '4D', 3 * u, 3 * u); // eighth
+      s = addNote(s, '4E', 6 * u, 4 * u); // triplet quarters
+      s = addNote(s, '4F', 10 * u, 4 * u);
+      s = addNote(s, '4G', 14 * u, 4 * u);
+      s = addNote(s, '4A', 18 * u, 6 * u);
+      const { song, warnings } = songFromMusicXml(songToMusicXml(s));
+      expect(warnings).toEqual([]);
+      expect(comparable(song)).toEqual(comparable(s));
+      // Files from other software don't carry the grid: the coarsest one that fits is chosen.
+      const foreign = songToMusicXml(s).replace(/<miscellaneous-field name="bellscore-subdivisions">.*?<\/miscellaneous-field>/, '');
+      expect(songFromMusicXml(foreign).song.subdivisions).toBe(6);
+    }
   });
 
   it('reads files from notation software', () => {
@@ -109,6 +140,42 @@ describe('musicxml', () => {
       { pitch: '3C', step: 8, length: 4 },
     ]);
     expect(warnings).toEqual(['装飾音符 1 個を除きました。']);
+  });
+
+  it('expands repeats and 1st/2nd endings', () => {
+    const bar = (inner = '') => `<measure>${inner}</measure>`;
+    const fwd = '<barline location="left"><repeat direction="forward"/></barline>';
+    const end = (n: string, back = '') =>
+      `<barline location="left"><ending number="${n}" type="start"/></barline>` +
+      `<barline location="right"><ending number="${n}" type="stop"/>${back}</barline>`;
+    const doc = parseXml(
+      `<part>${bar()}${bar(fwd)}${bar(end('1', '<repeat direction="backward"/>'))}${bar(end('2'))}${bar()}</part>`,
+    );
+    expect(playOrder(doc.children[0].children)).toEqual([0, 1, 2, 1, 3, 4]);
+    const plain = parseXml(`<part>${bar()}${bar('<barline><repeat direction="backward" times="3"/></barline>')}</part>`);
+    expect(playOrder(plain.children[0].children)).toEqual([0, 1, 0, 1, 0, 1]);
+
+    const note = (step: string) => `<note><pitch><step>${step}</step><octave>4</octave></pitch><duration>1</duration><type>quarter</type></note>`;
+    const xml = `<score-partwise><part-list><score-part id="P1"/></part-list><part id="P1">
+      <measure><attributes><divisions>1</divisions><time><beats>1</beats><beat-type>4</beat-type></time></attributes>${fwd}${note('C')}</measure>
+      <measure>${end('1', '<repeat direction="backward"/>')}${note('D')}</measure>
+      <measure>${end('2')}${note('E')}</measure></part></score-partwise>`;
+    const { song } = songFromMusicXml(xml);
+    expect(song.measures).toBe(4);
+    expect(song.notes.map((n) => [n.pitch, n.step])).toEqual([['4C', 0], ['4D', 2], ['4C', 4], ['4E', 6]]);
+  });
+
+  it('picks the closest grid when 32nds and triplets are mixed', () => {
+    const note = (d: number, tm = '') => `<note><pitch><step>C</step><octave>4</octave></pitch><duration>${d}</duration>${tm}</note>`;
+    const tri = '<time-modification><actual-notes>3</actual-notes><normal-notes>2</normal-notes></time-modification>';
+    const xml = `<score-partwise><part-list><score-part id="P1"/></part-list><part id="P1"><measure>
+      <attributes><divisions>24</divisions><time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      ${note(8, tri)}${note(8, tri)}${note(8, tri)}${note(9)}${note(3)}${note(12)}</measure></part></score-partwise>`;
+    const { song, warnings } = songFromMusicXml(xml);
+    // 6 and 12 are both off by 1/24 beat at most; the coarser one wins.
+    expect(song.subdivisions).toBe(6);
+    expect(song.notes.map((n) => n.step)).toEqual([0, 2, 4, 6, 8, 9]);
+    expect(warnings).toHaveLength(1);
   });
 
   it('rejects files that are not MusicXML', () => {
