@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "id": "sample-a-whole-new-world-first-half",
-  "title": "ホール・ニュー・ワールド（ハンドベル編曲・前半）",
+  "id": "sample-aladdin",
+  "title": "アラジン",
   "tempo": 100,
   "beatsPerMeasure": 4,
   "subdivisions": 6,
@@ -10,7 +10,24 @@
     "low": "3A",
     "high": "5E"
   },
-  "assignments": {},
+  "assignments": {
+    "3A": "Aさん",
+    "3A#": "Aさん",
+    "3B": "Bさん",
+    "4C": "Bさん",
+    "4C#": "Cさん",
+    "4D#": "Cさん",
+    "4E": "Dさん",
+    "4F": "Dさん",
+    "4F#": "Eさん",
+    "4G#": "Eさん",
+    "4A": "Fさん",
+    "4B": "Fさん",
+    "5C": "Gさん",
+    "5C#": "Gさん",
+    "5D#": "Hさん",
+    "5E": "Hさん"
+  },
   "notes": [
     {
       "pitch": "4G#",
@@ -203,6 +220,11 @@
       "length": 6
     },
     {
+      "pitch": "3B",
+      "step": 132,
+      "length": 12
+    },
+    {
       "pitch": "4E",
       "step": 138,
       "length": 6
@@ -230,7 +252,7 @@
     {
       "pitch": "3B",
       "step": 153,
-      "length": 3
+      "length": 10
     },
     {
       "pitch": "4E",
@@ -246,6 +268,21 @@
       "pitch": "4E",
       "step": 168,
       "length": 24
+    },
+    {
+      "pitch": "4G#",
+      "step": 174,
+      "length": 6
+    },
+    {
+      "pitch": "4B",
+      "step": 180,
+      "length": 6
+    },
+    {
+      "pitch": "5E",
+      "step": 186,
+      "length": 6
     },
     {
       "pitch": "4G#",
@@ -303,6 +340,11 @@
       "length": 24
     },
     {
+      "pitch": "4B",
+      "step": 228,
+      "length": 6
+    },
+    {
       "pitch": "4G#",
       "step": 240,
       "length": 6
@@ -320,12 +362,12 @@
     {
       "pitch": "4F#",
       "step": 246,
-      "length": 6
+      "length": 3
     },
     {
       "pitch": "4A",
-      "step": 252,
-      "length": 3
+      "step": 249,
+      "length": 6
     },
     {
       "pitch": "4G#",
@@ -348,6 +390,11 @@
       "length": 6
     },
     {
+      "pitch": "5C#",
+      "step": 264,
+      "length": 12
+    },
+    {
       "pitch": "4G#",
       "step": 264,
       "length": 12
@@ -360,6 +407,11 @@
     {
       "pitch": "4C#",
       "step": 264,
+      "length": 12
+    },
+    {
+      "pitch": "5D#",
+      "step": 276,
       "length": 12
     },
     {
@@ -376,6 +428,11 @@
       "pitch": "3B",
       "step": 276,
       "length": 12
+    },
+    {
+      "pitch": "5C#",
+      "step": 288,
+      "length": 9
     },
     {
       "pitch": "4F#",
@@ -398,6 +455,11 @@
       "length": 3
     },
     {
+      "pitch": "5C",
+      "step": 297,
+      "length": 15
+    },
+    {
       "pitch": "4G#",
       "step": 297,
       "length": 6
@@ -416,6 +478,11 @@
       "pitch": "4D#",
       "step": 306,
       "length": 6
+    },
+    {
+      "pitch": "4B",
+      "step": 312,
+      "length": 24
     },
     {
       "pitch": "4F#",
@@ -438,9 +505,19 @@
       "length": 6
     },
     {
+      "pitch": "3B",
+      "step": 324,
+      "length": 12
+    },
+    {
       "pitch": "4E",
       "step": 330,
       "length": 6
+    },
+    {
+      "pitch": "5C#",
+      "step": 336,
+      "length": 21
     },
     {
       "pitch": "4C#",
@@ -693,6 +770,16 @@
       "length": 9
     },
     {
+      "pitch": "4G#",
+      "step": 492,
+      "length": 12
+    },
+    {
+      "pitch": "4E",
+      "step": 492,
+      "length": 9
+    },
+    {
       "pitch": "3B",
       "step": 492,
       "length": 12
@@ -713,7 +800,7 @@
       "length": 12
     },
     {
-      "pitch": "4C#",
+      "pitch": "4C",
       "step": 504,
       "length": 12
     },
@@ -729,6 +816,16 @@
     },
     {
       "pitch": "4B",
+      "step": 516,
+      "length": 9
+    },
+    {
+      "pitch": "4G#",
+      "step": 516,
+      "length": 12
+    },
+    {
+      "pitch": "4E",
       "step": 516,
       "length": 9
     },
@@ -749,6 +846,11 @@
     },
     {
       "pitch": "4C#",
+      "step": 528,
+      "length": 24
+    },
+    {
+      "pitch": "3A#",
       "step": 528,
       "length": 24
     },
@@ -808,29 +910,29 @@
       "length": 6
     },
     {
-      "pitch": "5E",
-      "step": 576,
-      "length": 24
-    },
-    {
-      "pitch": "4B",
-      "step": 576,
-      "length": 24
-    },
-    {
-      "pitch": "4G#",
-      "step": 576,
-      "length": 24
-    },
-    {
       "pitch": "4E",
       "step": 576,
-      "length": 24
+      "length": 18
     },
     {
       "pitch": "3B",
       "step": 576,
-      "length": 24
+      "length": 18
+    },
+    {
+      "pitch": "4G#",
+      "step": 582,
+      "length": 12
+    },
+    {
+      "pitch": "5E",
+      "step": 588,
+      "length": 6
+    },
+    {
+      "pitch": "4B",
+      "step": 588,
+      "length": 6
     }
   ]
 }

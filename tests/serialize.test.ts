@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { addNote, createSong, setAssignment } from '../src/model/song';
-import twinkle from '../src/samples/twinkle.bellscore.json';
+import ffx from '../src/samples/to-zanarkand.bellscore.json';
 import { decodeFromUrl, encodeForUrl, parseSong, songFromJson, songToJson } from '../src/model/serialize';
 
 function sample() {
@@ -36,7 +36,7 @@ describe('serialize', () => {
   });
 
   it('loads the bundled sample song', () => {
-    const s = parseSong(twinkle);
+    const s = parseSong(ffx);
     expect(s.range).toEqual({ low: '3A', high: '5E' });
     expect(s.notes.length).toBeGreaterThan(0);
   });
@@ -44,7 +44,7 @@ describe('serialize', () => {
   it('loads every bundled sample song', () => {
     const files = import.meta.glob('../src/samples/*.bellscore.json', { eager: true, import: 'default' });
     const ids = Object.values(files).map((data) => parseSong(data).id);
-    expect(ids.length).toBeGreaterThanOrEqual(3);
+    expect(ids.length).toBeGreaterThanOrEqual(2);
     expect(new Set(ids).size).toBe(ids.length);
   });
 });

@@ -4,7 +4,7 @@ import { parseSong } from '../src/model/serialize';
 import { addNote, createSong, setAssignment } from '../src/model/song';
 import { parseXml } from '../src/model/xml';
 import { readMxl } from '../src/util/zip';
-import twinkle from '../src/samples/twinkle.bellscore.json';
+import ffx from '../src/samples/to-zanarkand.bellscore.json';
 
 async function deflateRaw(bytes: Uint8Array): Promise<Uint8Array> {
   const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'));
@@ -53,7 +53,7 @@ describe('musicxml', () => {
   });
 
   it('round-trips through MusicXML', () => {
-    for (const s of [sample(), parseSong(twinkle)]) {
+    for (const s of [sample(), parseSong(ffx)]) {
       const { song, warnings } = songFromMusicXml(songToMusicXml(s));
       expect(warnings).toEqual([]);
       expect(comparable(song)).toEqual(comparable(s));
