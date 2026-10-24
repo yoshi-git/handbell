@@ -100,17 +100,14 @@ export function SongList() {
         {songs.length === 0 ? (
           <p className="empty">まだ曲がありません。「新しい曲」から作成するか、サンプル曲をコピーしてください。</p>
         ) : (
-          <ul className="cards">
+          <ul className="song-rows">
             {songs.map((s) => (
-              <li key={s.id} className="card">
-                <a href={`#/edit/${s.id}`} className="card-title">
-                  {s.title || '無題'}
+              <li key={s.id}>
+                <a href={`#/edit/${s.id}`} className="row-link">
+                  <span className="row-title">{s.title || '無題'}</span>
+                  <span className="row-meta">{summary(s)}</span>
                 </a>
-                <div className="card-meta">{summary(s)}</div>
-                <div className="card-actions">
-                  <a className="button" href={`#/edit/${s.id}`}>
-                    開く
-                  </a>
+                <div className="row-actions">
                   <button onClick={() => duplicate(s)}>複製</button>
                   <button onClick={() => downloadText(`${safeFilename(s.title)}.bellscore.json`, songToJson(s))}>
                     書き出し
@@ -127,18 +124,13 @@ export function SongList() {
 
       <section>
         <h2>サンプル曲</h2>
-        <ul className="cards">
+        <ul className="song-rows">
           {SAMPLES.map((s) => (
-            <li key={s.id} className="card sample">
-              <a href={`#/sample/${s.id}`} className="card-title">
-                {s.title}
+            <li key={s.id}>
+              <a href={`#/sample/${s.id}`} className="row-link">
+                <span className="row-title">{s.title}</span>
+                <span className="row-meta">{summary(s)}</span>
               </a>
-              <div className="card-meta">{summary(s)}</div>
-              <div className="card-actions">
-                <a className="button" href={`#/sample/${s.id}`}>
-                  見る・試奏
-                </a>
-              </div>
             </li>
           ))}
         </ul>
