@@ -323,7 +323,8 @@ export function songFromMusicXml(text: string): MusicXmlImport {
     let divisions = 1;
     let chromatic = 0;
     let measureStart = 0; // quarters
-    const open = new Map<number, RawNote>();
+    // Notes waiting for a tie to continue them; one pitch can have several in different voices.
+    const open = new Map<number, RawNote[]>();
     const measures = children(part, 'measure');
     playOrder(measures).forEach((index, mi) => {
       const measure = measures[index];
@@ -377,9 +378,12 @@ export function songFromMusicXml(text: string): MusicXmlImport {
           if (pc === undefined || octave === undefined) continue;
           const midi = (octave + 1) * 12 + pc + Math.round(num(p, 'alter') ?? 0) + chromatic;
           const ties = children(el, 'tie').map((t) => t.attrs.type);
-          const prev = open.get(midi);
+          const pending = open.get(midi) ?? [];
+          const prev = ties.includes('stop')
+            ? pending.find((p) => Math.abs(p.start + p.dur - q(start)) < EPS)
+            : undefined;
           let note: RawNote;
-          if (ties.includes('stop') && prev && Math.abs(prev.start + prev.dur - q(start)) < EPS) {
+          if (prev) {
             prev.dur += dur / divisions;
             note = prev;
           } else {
@@ -387,8 +391,9 @@ export function songFromMusicXml(text: string): MusicXmlImport {
             raw.push(note);
           }
           // Only the note that ends a tie closes it: the same pitch in another voice must not.
-          if (ties.includes('start')) open.set(midi, note);
-          else if (ties.includes('stop')) open.delete(midi);
+          const rest = pending.filter((p) => p !== prev);
+          if (ties.includes('start')) rest.push(note);
+          open.set(midi, rest);
         }
       }
       const len = maxCursor / divisions;

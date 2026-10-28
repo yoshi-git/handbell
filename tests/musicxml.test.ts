@@ -71,6 +71,18 @@ describe('musicxml', () => {
     }
   });
 
+  it('keeps a tie open while another voice starts a tie on the same pitch', () => {
+    let s = { ...createSong('タイ'), subdivisions: 4, measures: 3 };
+    s = addNote(s, '4C', 0, 8);
+    s = addNote(s, '4F', 8, 8);
+    s = addNote(s, '4A', 14, 6); // second voice, tied into measure 2
+    s = addNote(s, '4E', 16, 6);
+    s = addNote(s, '4A', 30, 4); // first voice, tie starts before the one above is stopped
+    const { song, warnings } = songFromMusicXml(songToMusicXml(s));
+    expect(warnings).toEqual([]);
+    expect(comparable(song)).toEqual(comparable(s));
+  });
+
   it('round-trips triplets', () => {
     let s = { ...createSong('三連'), subdivisions: 3, measures: 1 };
     s = addNote(s, '4C', 0, 1);
