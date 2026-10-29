@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "id": "sample-famima-short",
-  "title": "ファミマ入店音（バトル風）（ショート）",
+  "id": "mvtl5lq0o2fp0r",
+  "title": "famima_short_x2",
   "tempo": 180,
   "beatsPerMeasure": 4,
   "subdivisions": 2,
@@ -74,16 +74,6 @@
     },
     {
       "pitch": "4A",
-      "step": 48,
-      "length": 2
-    },
-    {
-      "pitch": "4F#",
-      "step": 48,
-      "length": 4
-    },
-    {
-      "pitch": "4A",
       "step": 50,
       "length": 2
     },
@@ -119,26 +109,11 @@
     },
     {
       "pitch": "4B",
-      "step": 60,
-      "length": 4
-    },
-    {
-      "pitch": "4E",
-      "step": 60,
-      "length": 4
-    },
-    {
-      "pitch": "4B",
       "step": 64,
       "length": 2
     },
     {
       "pitch": "4A",
-      "step": 64,
-      "length": 4
-    },
-    {
-      "pitch": "4D",
       "step": 64,
       "length": 4
     },
@@ -175,21 +150,6 @@
     {
       "pitch": "4E",
       "step": 72,
-      "length": 4
-    },
-    {
-      "pitch": "3A",
-      "step": 72,
-      "length": 4
-    },
-    {
-      "pitch": "4E",
-      "step": 76,
-      "length": 4
-    },
-    {
-      "pitch": "3A",
-      "step": 76,
       "length": 4
     }
   ]

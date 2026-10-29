@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "id": "sample-mario-short",
-  "title": "スーパーマリオブラザーズ（ショート）",
+  "id": "mvtl9b9ivgsjiv",
+  "title": "mario_short",
   "tempo": 180,
   "beatsPerMeasure": 4,
   "subdivisions": 6,
@@ -18,11 +18,6 @@
       "length": 3
     },
     {
-      "pitch": "3A",
-      "step": 0,
-      "length": 12
-    },
-    {
       "pitch": "4B",
       "step": 3,
       "length": 3
@@ -31,11 +26,6 @@
       "pitch": "4B",
       "step": 9,
       "length": 3
-    },
-    {
-      "pitch": "3A",
-      "step": 12,
-      "length": 12
     },
     {
       "pitch": "4G",
@@ -54,11 +44,6 @@
     },
     {
       "pitch": "4D",
-      "step": 24,
-      "length": 12
-    },
-    {
-      "pitch": "4D",
       "step": 36,
       "length": 6
     },
@@ -69,28 +54,13 @@
     },
     {
       "pitch": "4D",
-      "step": 48,
-      "length": 9
-    },
-    {
-      "pitch": "4D",
       "step": 57,
-      "length": 6
-    },
-    {
-      "pitch": "3B",
-      "step": 60,
       "length": 6
     },
     {
       "pitch": "3B",
       "step": 66,
       "length": 6
-    },
-    {
-      "pitch": "4C",
-      "step": 72,
-      "length": 12
     },
     {
       "pitch": "4E",
@@ -101,11 +71,6 @@
       "pitch": "4F#",
       "step": 81,
       "length": 6
-    },
-    {
-      "pitch": "4C#",
-      "step": 84,
-      "length": 12
     },
     {
       "pitch": "4F",
@@ -123,11 +88,6 @@
       "length": 4
     },
     {
-      "pitch": "3B",
-      "step": 96,
-      "length": 12
-    },
-    {
       "pitch": "4B",
       "step": 100,
       "length": 4
@@ -143,11 +103,6 @@
       "length": 6
     },
     {
-      "pitch": "4C",
-      "step": 108,
-      "length": 12
-    },
-    {
       "pitch": "5C",
       "step": 114,
       "length": 3
@@ -156,11 +111,6 @@
       "pitch": "5D",
       "step": 117,
       "length": 3
-    },
-    {
-      "pitch": "4G",
-      "step": 120,
-      "length": 9
     },
     {
       "pitch": "4B",
@@ -178,11 +128,6 @@
       "length": 3
     },
     {
-      "pitch": "4D",
-      "step": 132,
-      "length": 12
-    },
-    {
       "pitch": "4F#",
       "step": 135,
       "length": 6
@@ -194,28 +139,13 @@
     },
     {
       "pitch": "4D",
-      "step": 144,
-      "length": 9
-    },
-    {
-      "pitch": "4D",
       "step": 153,
-      "length": 6
-    },
-    {
-      "pitch": "3B",
-      "step": 156,
       "length": 6
     },
     {
       "pitch": "3B",
       "step": 162,
       "length": 6
-    },
-    {
-      "pitch": "4C",
-      "step": 168,
-      "length": 12
     },
     {
       "pitch": "4E",
@@ -226,11 +156,6 @@
       "pitch": "4F#",
       "step": 177,
       "length": 6
-    },
-    {
-      "pitch": "4C#",
-      "step": 180,
-      "length": 12
     },
     {
       "pitch": "4F",
@@ -248,11 +173,6 @@
       "length": 4
     },
     {
-      "pitch": "3B",
-      "step": 192,
-      "length": 12
-    },
-    {
       "pitch": "4B",
       "step": 196,
       "length": 4
@@ -268,11 +188,6 @@
       "length": 6
     },
     {
-      "pitch": "4C",
-      "step": 204,
-      "length": 12
-    },
-    {
       "pitch": "5C",
       "step": 210,
       "length": 3
@@ -281,11 +196,6 @@
       "pitch": "5D",
       "step": 213,
       "length": 3
-    },
-    {
-      "pitch": "4G",
-      "step": 216,
-      "length": 9
     },
     {
       "pitch": "4B",
@@ -301,11 +211,6 @@
       "pitch": "4A",
       "step": 228,
       "length": 3
-    },
-    {
-      "pitch": "4D",
-      "step": 228,
-      "length": 12
     },
     {
       "pitch": "4F#",

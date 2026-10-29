@@ -1,7 +1,7 @@
 {
-  "version": 1,
-  "id": "sample-butterfly-short",
-  "title": "Butterfly（ショート）",
+  "version": 2,
+  "id": "mvtliwa4tgb9vm",
+  "title": "butterfly_short",
   "tempo": 112,
   "beatsPerMeasure": 4,
   "subdivisions": 4,
@@ -10,23 +10,9 @@
     "low": "3A",
     "high": "5E"
   },
+  "accidental": "flat",
   "assignments": {},
   "notes": [
-    {
-      "pitch": "5C",
-      "step": 0,
-      "length": 8
-    },
-    {
-      "pitch": "4A",
-      "step": 0,
-      "length": 8
-    },
-    {
-      "pitch": "4F",
-      "step": 0,
-      "length": 8
-    },
     {
       "pitch": "4G#",
       "step": 12,
@@ -78,19 +64,14 @@
       "length": 2
     },
     {
-      "pitch": "4A#",
-      "step": 32,
-      "length": 8
-    },
-    {
       "pitch": "4G",
       "step": 32,
       "length": 4
     },
     {
-      "pitch": "3A#",
+      "pitch": "4C#",
       "step": 32,
-      "length": 8
+      "length": 4
     },
     {
       "pitch": "4C#",
@@ -345,37 +326,47 @@
     {
       "pitch": "5C",
       "step": 128,
-      "length": 4
-    },
-    {
-      "pitch": "4D#",
-      "step": 128,
-      "length": 8
-    },
-    {
-      "pitch": "4C",
-      "step": 128,
-      "length": 4
+      "length": 2
     },
     {
       "pitch": "4G#",
-      "step": 140,
+      "step": 128,
       "length": 2
     },
     {
       "pitch": "4D#",
-      "step": 140,
-      "length": 4
+      "step": 128,
+      "length": 6
     },
     {
-      "pitch": "3A#",
-      "step": 140,
-      "length": 4
+      "pitch": "4A#",
+      "step": 130,
+      "length": 2
     },
     {
       "pitch": "4G",
-      "step": 142,
+      "step": 130,
       "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 132,
+      "length": 2
+    },
+    {
+      "pitch": "4F",
+      "step": 132,
+      "length": 2
+    },
+    {
+      "pitch": "4G",
+      "step": 134,
+      "length": 6
+    },
+    {
+      "pitch": "4D#",
+      "step": 134,
+      "length": 6
     }
   ]
 }
