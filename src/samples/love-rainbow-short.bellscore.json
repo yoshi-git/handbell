@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "id": "sample-love-rainbow",
-  "title": "Love Rainbow",
+  "id": "sample-love-rainbow-short",
+  "title": "Love Rainbow (short)",
   "tempo": 142,
   "beatsPerMeasure": 4,
   "subdivisions": 4,
-  "measures": 109,
+  "measures": 82,
   "range": {
     "low": "3A",
     "high": "5E"
@@ -1486,7 +1486,7 @@
     {
       "pitch": "4E",
       "step": 686,
-      "length": 12
+      "length": 14
     },
     {
       "pitch": "5C",
@@ -1494,12 +1494,7 @@
       "length": 10
     },
     {
-      "pitch": "4G",
-      "step": 698,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
+      "pitch": "4A",
       "step": 698,
       "length": 2
     },
@@ -1509,44 +1504,99 @@
       "length": 2
     },
     {
+      "pitch": "4G",
+      "step": 700,
+      "length": 2
+    },
+    {
+      "pitch": "4A",
+      "step": 702,
+      "length": 4
+    },
+    {
       "pitch": "5C",
       "step": 702,
-      "length": 14
+      "length": 4
     },
     {
-      "pitch": "3A",
+      "pitch": "4F",
       "step": 704,
-      "length": 16
+      "length": 4
     },
     {
-      "pitch": "4G",
-      "step": 704,
-      "length": 8
+      "pitch": "4A",
+      "step": 706,
+      "length": 2
     },
     {
       "pitch": "4C",
-      "step": 712,
-      "length": 8
+      "step": 706,
+      "length": 2
     },
     {
-      "pitch": "4G",
+      "pitch": "4B",
+      "step": 708,
+      "length": 2
+    },
+    {
+      "pitch": "4D",
+      "step": 708,
+      "length": 2
+    },
+    {
+      "pitch": "4E",
+      "step": 710,
+      "length": 4
+    },
+    {
+      "pitch": "5C",
+      "step": 710,
+      "length": 4
+    },
+    {
+      "pitch": "4B",
+      "step": 714,
+      "length": 2
+    },
+    {
+      "pitch": "4D",
+      "step": 714,
+      "length": 2
+    },
+    {
+      "pitch": "4E",
       "step": 716,
       "length": 2
     },
     {
-      "pitch": "4G",
-      "step": 718,
+      "pitch": "5C",
+      "step": 716,
       "length": 2
     },
     {
-      "pitch": "4C",
-      "step": 720,
-      "length": 6
+      "pitch": "4F",
+      "step": 718,
+      "length": 4
     },
     {
-      "pitch": "4G",
-      "step": 720,
+      "pitch": "5D",
+      "step": 718,
       "length": 4
+    },
+    {
+      "pitch": "4B",
+      "step": 722,
+      "length": 2
+    },
+    {
+      "pitch": "4D",
+      "step": 722,
+      "length": 2
+    },
+    {
+      "pitch": "4E",
+      "step": 724,
+      "length": 2
     },
     {
       "pitch": "5C",
@@ -1554,1868 +1604,873 @@
       "length": 2
     },
     {
-      "pitch": "4B",
+      "pitch": "4F",
       "step": 726,
       "length": 4
     },
     {
-      "pitch": "4C",
-      "step": 728,
-      "length": 8
-    },
-    {
-      "pitch": "4G",
-      "step": 730,
+      "pitch": "5D",
+      "step": 726,
       "length": 4
     },
     {
-      "pitch": "4E",
+      "pitch": "4G",
+      "step": 732,
+      "length": 2
+    },
+    {
+      "pitch": "5E",
+      "step": 732,
+      "length": 2
+    },
+    {
+      "pitch": "4F",
       "step": 734,
-      "length": 10
+      "length": 6
+    },
+    {
+      "pitch": "5D",
+      "step": 734,
+      "length": 6
     },
     {
       "pitch": "4C",
       "step": 736,
-      "length": 8
-    },
-    {
-      "pitch": "4C",
-      "step": 744,
-      "length": 8
+      "length": 14
     },
     {
       "pitch": "4G",
-      "step": 748,
+      "step": 740,
       "length": 2
+    },
+    {
+      "pitch": "5E",
+      "step": 740,
+      "length": 2
+    },
+    {
+      "pitch": "4F",
+      "step": 742,
+      "length": 4
+    },
+    {
+      "pitch": "5D",
+      "step": 742,
+      "length": 4
+    },
+    {
+      "pitch": "4E",
+      "step": 746,
+      "length": 4
+    },
+    {
+      "pitch": "5C",
+      "step": 746,
+      "length": 4
+    },
+    {
+      "pitch": "4C",
+      "step": 750,
+      "length": 10
     },
     {
       "pitch": "4G",
       "step": 750,
-      "length": 2
+      "length": 10
     },
     {
-      "pitch": "4E",
+      "pitch": "3A",
       "step": 752,
       "length": 16
     },
     {
-      "pitch": "4G",
-      "step": 752,
-      "length": 4
+      "pitch": "4A",
+      "step": 762,
+      "length": 2
     },
     {
       "pitch": "5C",
-      "step": 756,
+      "step": 762,
       "length": 2
     },
     {
       "pitch": "4B",
-      "step": 758,
-      "length": 4
+      "step": 764,
+      "length": 2
     },
     {
-      "pitch": "4C",
-      "step": 760,
-      "length": 8
+      "pitch": "4G",
+      "step": 764,
+      "length": 2
     },
     {
-      "pitch": "5D",
-      "step": 762,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
+      "pitch": "4A",
       "step": 766,
       "length": 10
     },
     {
+      "pitch": "4F",
+      "step": 766,
+      "length": 4
+    },
+    {
+      "pitch": "4C",
+      "step": 770,
+      "length": 2
+    },
+    {
+      "pitch": "3B",
+      "step": 772,
+      "length": 2
+    },
+    {
       "pitch": "3A",
-      "step": 768,
-      "length": 16
+      "step": 774,
+      "length": 4
     },
     {
-      "pitch": "4G",
-      "step": 768,
-      "length": 8
-    },
-    {
-      "pitch": "4G",
-      "step": 776,
-      "length": 8
+      "pitch": "4A",
+      "step": 778,
+      "length": 2
     },
     {
       "pitch": "5C",
+      "step": 778,
+      "length": 2
+    },
+    {
+      "pitch": "4B",
       "step": 780,
       "length": 2
     },
     {
-      "pitch": "5C",
-      "step": 782,
+      "pitch": "4G",
+      "step": 780,
       "length": 2
     },
     {
+      "pitch": "4A",
+      "step": 782,
+      "length": 10
+    },
+    {
+      "pitch": "4F",
+      "step": 782,
+      "length": 4
+    },
+    {
       "pitch": "4C",
-      "step": 784,
-      "length": 4
+      "step": 786,
+      "length": 2
     },
     {
-      "pitch": "5C",
-      "step": 784,
-      "length": 4
-    },
-    {
-      "pitch": "4B",
+      "pitch": "3B",
       "step": 788,
       "length": 2
     },
     {
-      "pitch": "4A",
+      "pitch": "4D",
       "step": 790,
-      "length": 4
+      "length": 6
     },
     {
-      "pitch": "4B",
-      "step": 794,
-      "length": 4
-    },
-    {
-      "pitch": "4B",
+      "pitch": "4C",
       "step": 798,
-      "length": 8
+      "length": 6
     },
     {
-      "pitch": "5D",
+      "pitch": "4G",
       "step": 798,
-      "length": 8
+      "length": 2
     },
     {
-      "pitch": "4F#",
+      "pitch": "4G",
       "step": 800,
-      "length": 16
+      "length": 4
     },
     {
       "pitch": "4A",
-      "step": 806,
-      "length": 6
-    },
-    {
-      "pitch": "5C",
-      "step": 806,
+      "step": 804,
       "length": 2
     },
     {
+      "pitch": "4D",
+      "step": 804,
+      "length": 2
+    },
+    {
+      "pitch": "4E",
+      "step": 806,
+      "length": 4
+    },
+    {
       "pitch": "5C",
-      "step": 808,
+      "step": 806,
+      "length": 4
+    },
+    {
+      "pitch": "4F",
+      "step": 810,
+      "length": 4
+    },
+    {
+      "pitch": "5D",
+      "step": 810,
       "length": 4
     },
     {
       "pitch": "4G",
-      "step": 816,
-      "length": 8
-    },
-    {
-      "pitch": "5C",
-      "step": 816,
-      "length": 6
+      "step": 814,
+      "length": 4
     },
     {
       "pitch": "5E",
-      "step": 816,
-      "length": 6
+      "step": 814,
+      "length": 4
     },
     {
-      "pitch": "4A",
-      "step": 822,
-      "length": 8
-    },
-    {
-      "pitch": "5D",
-      "step": 822,
+      "pitch": "4F",
+      "step": 818,
       "length": 2
     },
     {
       "pitch": "5D",
+      "step": 818,
+      "length": 2
+    },
+    {
+      "pitch": "4E",
+      "step": 820,
+      "length": 4
+    },
+    {
+      "pitch": "5C",
+      "step": 820,
+      "length": 4
+    },
+    {
+      "pitch": "4C",
       "step": 824,
-      "length": 6
-    },
-    {
-      "pitch": "4G",
-      "step": 830,
-      "length": 10
-    },
-    {
-      "pitch": "5C",
-      "step": 830,
       "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 832,
-      "length": 8
-    },
-    {
-      "pitch": "4C",
-      "step": 840,
-      "length": 8
-    },
-    {
-      "pitch": "5D",
-      "step": 840,
-      "length": 8
     },
     {
       "pitch": "4A",
-      "step": 874,
+      "step": 826,
       "length": 2
     },
     {
       "pitch": "4C",
-      "step": 874,
+      "step": 826,
       "length": 2
     },
     {
       "pitch": "4B",
-      "step": 876,
+      "step": 828,
       "length": 2
     },
     {
       "pitch": "4D",
-      "step": 876,
+      "step": 828,
       "length": 2
     },
     {
       "pitch": "4E",
-      "step": 878,
+      "step": 830,
       "length": 4
     },
     {
       "pitch": "5C",
-      "step": 878,
+      "step": 830,
       "length": 4
     },
     {
       "pitch": "4A",
-      "step": 882,
+      "step": 834,
       "length": 2
     },
     {
       "pitch": "4C",
-      "step": 882,
+      "step": 834,
       "length": 2
     },
     {
       "pitch": "4B",
-      "step": 884,
+      "step": 836,
       "length": 2
     },
     {
       "pitch": "4D",
-      "step": 884,
+      "step": 836,
       "length": 2
     },
     {
       "pitch": "4E",
-      "step": 886,
+      "step": 838,
       "length": 4
     },
     {
       "pitch": "5C",
-      "step": 886,
+      "step": 838,
       "length": 4
     },
     {
       "pitch": "4B",
-      "step": 890,
+      "step": 842,
       "length": 2
     },
     {
       "pitch": "4D",
-      "step": 890,
+      "step": 842,
       "length": 2
     },
     {
       "pitch": "4E",
-      "step": 892,
+      "step": 844,
       "length": 2
     },
     {
       "pitch": "5C",
-      "step": 892,
+      "step": 844,
       "length": 2
     },
     {
       "pitch": "4F",
-      "step": 894,
+      "step": 846,
       "length": 4
     },
     {
       "pitch": "5D",
-      "step": 894,
+      "step": 846,
       "length": 4
     },
     {
       "pitch": "4B",
-      "step": 898,
+      "step": 850,
       "length": 2
     },
     {
       "pitch": "4D",
-      "step": 898,
+      "step": 850,
       "length": 2
     },
     {
       "pitch": "4E",
-      "step": 900,
+      "step": 852,
       "length": 2
     },
     {
       "pitch": "5C",
-      "step": 900,
+      "step": 852,
       "length": 2
     },
     {
       "pitch": "4F",
-      "step": 902,
-      "length": 6
+      "step": 854,
+      "length": 4
     },
     {
       "pitch": "5D",
-      "step": 902,
+      "step": 854,
       "length": 4
     },
     {
       "pitch": "4G",
-      "step": 908,
+      "step": 860,
       "length": 2
     },
     {
       "pitch": "5E",
-      "step": 908,
+      "step": 860,
       "length": 2
     },
     {
       "pitch": "4F",
-      "step": 910,
+      "step": 862,
       "length": 6
     },
     {
       "pitch": "5D",
-      "step": 910,
+      "step": 862,
       "length": 6
     },
     {
-      "pitch": "4C",
-      "step": 912,
+      "pitch": "4G",
+      "step": 868,
+      "length": 2
+    },
+    {
+      "pitch": "5E",
+      "step": 868,
+      "length": 2
+    },
+    {
+      "pitch": "4F",
+      "step": 870,
+      "length": 4
+    },
+    {
+      "pitch": "5D",
+      "step": 870,
+      "length": 4
+    },
+    {
+      "pitch": "4E",
+      "step": 874,
+      "length": 4
+    },
+    {
+      "pitch": "5C",
+      "step": 874,
+      "length": 4
+    },
+    {
+      "pitch": "3A",
+      "step": 878,
+      "length": 16
+    },
+    {
+      "pitch": "4G",
+      "step": 878,
       "length": 14
     },
     {
+      "pitch": "3B",
+      "step": 894,
+      "length": 2
+    },
+    {
       "pitch": "4G",
-      "step": 916,
+      "step": 894,
       "length": 2
     },
     {
-      "pitch": "5E",
-      "step": 916,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 918,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 918,
-      "length": 4
-    },
-    {
-      "pitch": "4E",
-      "step": 922,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 922,
+      "pitch": "4A",
+      "step": 896,
       "length": 4
     },
     {
       "pitch": "4C",
-      "step": 926,
-      "length": 10
+      "step": 896,
+      "length": 4
+    },
+    {
+      "pitch": "3B",
+      "step": 900,
+      "length": 2
     },
     {
       "pitch": "4G",
-      "step": 926,
-      "length": 10
+      "step": 900,
+      "length": 2
     },
     {
-      "pitch": "3A",
-      "step": 928,
-      "length": 8
+      "pitch": "4A",
+      "step": 902,
+      "length": 4
     },
     {
-      "pitch": "3A",
+      "pitch": "4C",
+      "step": 902,
+      "length": 4
+    },
+    {
+      "pitch": "4E",
+      "step": 906,
+      "length": 4
+    },
+    {
+      "pitch": "4G",
+      "step": 906,
+      "length": 4
+    },
+    {
+      "pitch": "5E",
+      "step": 906,
+      "length": 4
+    },
+    {
+      "pitch": "4E",
+      "step": 910,
+      "length": 18
+    },
+    {
+      "pitch": "5C",
+      "step": 910,
+      "length": 18
+    },
+    {
+      "pitch": "4D",
+      "step": 930,
+      "length": 2
+    },
+    {
+      "pitch": "4F",
+      "step": 930,
+      "length": 2
+    },
+    {
+      "pitch": "5D",
+      "step": 930,
+      "length": 2
+    },
+    {
+      "pitch": "4E",
+      "step": 932,
+      "length": 2
+    },
+    {
+      "pitch": "5C",
+      "step": 932,
+      "length": 2
+    },
+    {
+      "pitch": "4F",
+      "step": 934,
+      "length": 2
+    },
+    {
+      "pitch": "5D",
+      "step": 934,
+      "length": 2
+    },
+    {
+      "pitch": "4E",
       "step": 936,
-      "length": 6
+      "length": 2
     },
     {
-      "pitch": "4A",
+      "pitch": "5C",
+      "step": 936,
+      "length": 2
+    },
+    {
+      "pitch": "4G",
       "step": 938,
-      "length": 2
+      "length": 4
     },
     {
-      "pitch": "5C",
+      "pitch": "5E",
       "step": 938,
-      "length": 2
+      "length": 4
     },
     {
-      "pitch": "4B",
-      "step": 940,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 940,
-      "length": 2
-    },
-    {
-      "pitch": "4A",
+      "pitch": "4E",
       "step": 942,
-      "length": 10
-    },
-    {
-      "pitch": "4F",
-      "step": 942,
-      "length": 4
-    },
-    {
-      "pitch": "4C",
-      "step": 946,
-      "length": 2
-    },
-    {
-      "pitch": "3B",
-      "step": 948,
-      "length": 2
-    },
-    {
-      "pitch": "3A",
-      "step": 950,
-      "length": 4
-    },
-    {
-      "pitch": "4A",
-      "step": 954,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 954,
-      "length": 2
-    },
-    {
-      "pitch": "4B",
-      "step": 956,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 956,
-      "length": 2
-    },
-    {
-      "pitch": "4A",
-      "step": 958,
-      "length": 10
-    },
-    {
-      "pitch": "4F",
-      "step": 958,
-      "length": 4
-    },
-    {
-      "pitch": "4C",
-      "step": 962,
-      "length": 2
-    },
-    {
-      "pitch": "3B",
-      "step": 964,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 966,
-      "length": 6
-    },
-    {
-      "pitch": "4C",
-      "step": 974,
-      "length": 6
-    },
-    {
-      "pitch": "4G",
-      "step": 974,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 976,
-      "length": 4
-    },
-    {
-      "pitch": "4A",
-      "step": 980,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 980,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 982,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 982,
-      "length": 4
-    },
-    {
-      "pitch": "4F",
-      "step": 986,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 986,
-      "length": 4
-    },
-    {
-      "pitch": "4G",
-      "step": 990,
-      "length": 4
-    },
-    {
-      "pitch": "5E",
-      "step": 990,
-      "length": 4
-    },
-    {
-      "pitch": "4F",
-      "step": 994,
-      "length": 2
-    },
-    {
-      "pitch": "5D",
-      "step": 994,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 996,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 996,
-      "length": 4
-    },
-    {
-      "pitch": "4C",
-      "step": 1000,
-      "length": 2
-    },
-    {
-      "pitch": "4A",
-      "step": 1002,
-      "length": 2
-    },
-    {
-      "pitch": "4C",
-      "step": 1002,
-      "length": 2
-    },
-    {
-      "pitch": "4B",
-      "step": 1004,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1004,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1006,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 1006,
-      "length": 4
-    },
-    {
-      "pitch": "4A",
-      "step": 1010,
-      "length": 2
-    },
-    {
-      "pitch": "4C",
-      "step": 1010,
-      "length": 2
-    },
-    {
-      "pitch": "4B",
-      "step": 1012,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1012,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1014,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 1014,
-      "length": 4
-    },
-    {
-      "pitch": "4B",
-      "step": 1018,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1018,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1020,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 1020,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1022,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 1022,
-      "length": 4
-    },
-    {
-      "pitch": "4B",
-      "step": 1026,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1026,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1028,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 1028,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1030,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 1030,
-      "length": 4
-    },
-    {
-      "pitch": "4G",
-      "step": 1036,
-      "length": 2
-    },
-    {
-      "pitch": "5E",
-      "step": 1036,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1038,
-      "length": 6
-    },
-    {
-      "pitch": "5D",
-      "step": 1038,
-      "length": 6
-    },
-    {
-      "pitch": "4G",
-      "step": 1044,
-      "length": 2
-    },
-    {
-      "pitch": "5E",
-      "step": 1044,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1046,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 1046,
-      "length": 4
-    },
-    {
-      "pitch": "4E",
-      "step": 1050,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 1050,
-      "length": 4
-    },
-    {
-      "pitch": "3A",
-      "step": 1054,
-      "length": 16
-    },
-    {
-      "pitch": "4G",
-      "step": 1054,
-      "length": 14
-    },
-    {
-      "pitch": "3B",
-      "step": 1070,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 1070,
-      "length": 2
-    },
-    {
-      "pitch": "4A",
-      "step": 1072,
-      "length": 4
-    },
-    {
-      "pitch": "4C",
-      "step": 1072,
-      "length": 4
-    },
-    {
-      "pitch": "3B",
-      "step": 1076,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 1076,
-      "length": 2
-    },
-    {
-      "pitch": "4A",
-      "step": 1078,
-      "length": 4
-    },
-    {
-      "pitch": "4C",
-      "step": 1078,
-      "length": 4
-    },
-    {
-      "pitch": "4E",
-      "step": 1082,
-      "length": 4
-    },
-    {
-      "pitch": "4G",
-      "step": 1082,
-      "length": 4
-    },
-    {
-      "pitch": "5E",
-      "step": 1082,
-      "length": 4
-    },
-    {
-      "pitch": "4E",
-      "step": 1086,
-      "length": 18
-    },
-    {
-      "pitch": "5C",
-      "step": 1086,
-      "length": 18
-    },
-    {
-      "pitch": "4D",
-      "step": 1106,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1106,
-      "length": 2
-    },
-    {
-      "pitch": "5D",
-      "step": 1106,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1108,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 1108,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1110,
-      "length": 2
-    },
-    {
-      "pitch": "5D",
-      "step": 1110,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1112,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 1112,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 1114,
-      "length": 4
-    },
-    {
-      "pitch": "5E",
-      "step": 1114,
-      "length": 4
-    },
-    {
-      "pitch": "4E",
-      "step": 1118,
-      "length": 14
-    },
-    {
-      "pitch": "5C",
-      "step": 1118,
-      "length": 10
-    },
-    {
-      "pitch": "4A",
-      "step": 1130,
-      "length": 2
-    },
-    {
-      "pitch": "4B",
-      "step": 1132,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 1132,
-      "length": 2
-    },
-    {
-      "pitch": "4A",
-      "step": 1134,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 1134,
-      "length": 4
-    },
-    {
-      "pitch": "4F",
-      "step": 1136,
-      "length": 4
-    },
-    {
-      "pitch": "4A",
-      "step": 1138,
-      "length": 2
-    },
-    {
-      "pitch": "4C",
-      "step": 1138,
-      "length": 2
-    },
-    {
-      "pitch": "4B",
-      "step": 1140,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1140,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1142,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 1142,
-      "length": 4
-    },
-    {
-      "pitch": "4B",
-      "step": 1146,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1146,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1148,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 1148,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1150,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 1150,
-      "length": 4
-    },
-    {
-      "pitch": "4B",
-      "step": 1154,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1154,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1156,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 1156,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1158,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 1158,
-      "length": 4
-    },
-    {
-      "pitch": "4G",
-      "step": 1164,
-      "length": 2
-    },
-    {
-      "pitch": "5E",
-      "step": 1164,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1166,
-      "length": 6
-    },
-    {
-      "pitch": "5D",
-      "step": 1166,
-      "length": 6
-    },
-    {
-      "pitch": "4C",
-      "step": 1168,
-      "length": 14
-    },
-    {
-      "pitch": "4G",
-      "step": 1172,
-      "length": 2
-    },
-    {
-      "pitch": "5E",
-      "step": 1172,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1174,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 1174,
-      "length": 4
-    },
-    {
-      "pitch": "4E",
-      "step": 1178,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 1178,
-      "length": 4
-    },
-    {
-      "pitch": "4C",
-      "step": 1182,
-      "length": 10
-    },
-    {
-      "pitch": "4G",
-      "step": 1182,
-      "length": 10
-    },
-    {
-      "pitch": "3A",
-      "step": 1184,
-      "length": 16
-    },
-    {
-      "pitch": "4A",
-      "step": 1194,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 1194,
-      "length": 2
-    },
-    {
-      "pitch": "4B",
-      "step": 1196,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 1196,
-      "length": 2
-    },
-    {
-      "pitch": "4A",
-      "step": 1198,
-      "length": 10
-    },
-    {
-      "pitch": "4F",
-      "step": 1198,
-      "length": 4
-    },
-    {
-      "pitch": "4C",
-      "step": 1202,
-      "length": 2
-    },
-    {
-      "pitch": "3B",
-      "step": 1204,
-      "length": 2
-    },
-    {
-      "pitch": "3A",
-      "step": 1206,
-      "length": 4
-    },
-    {
-      "pitch": "4A",
-      "step": 1210,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 1210,
-      "length": 2
-    },
-    {
-      "pitch": "4B",
-      "step": 1212,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 1212,
-      "length": 2
-    },
-    {
-      "pitch": "4A",
-      "step": 1214,
-      "length": 10
-    },
-    {
-      "pitch": "4F",
-      "step": 1214,
-      "length": 4
-    },
-    {
-      "pitch": "4C",
-      "step": 1218,
-      "length": 2
-    },
-    {
-      "pitch": "3B",
-      "step": 1220,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1222,
-      "length": 6
-    },
-    {
-      "pitch": "4C",
-      "step": 1230,
-      "length": 6
-    },
-    {
-      "pitch": "4G",
-      "step": 1230,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 1232,
-      "length": 4
-    },
-    {
-      "pitch": "4A",
-      "step": 1236,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1236,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1238,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 1238,
-      "length": 4
-    },
-    {
-      "pitch": "4F",
-      "step": 1242,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 1242,
-      "length": 4
-    },
-    {
-      "pitch": "4G",
-      "step": 1246,
-      "length": 4
-    },
-    {
-      "pitch": "5E",
-      "step": 1246,
-      "length": 4
-    },
-    {
-      "pitch": "4F",
-      "step": 1250,
-      "length": 2
-    },
-    {
-      "pitch": "5D",
-      "step": 1250,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1252,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 1252,
-      "length": 4
-    },
-    {
-      "pitch": "4C",
-      "step": 1256,
-      "length": 2
-    },
-    {
-      "pitch": "4A",
-      "step": 1258,
-      "length": 2
-    },
-    {
-      "pitch": "4C",
-      "step": 1258,
-      "length": 2
-    },
-    {
-      "pitch": "4B",
-      "step": 1260,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1260,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1262,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 1262,
-      "length": 4
-    },
-    {
-      "pitch": "4A",
-      "step": 1266,
-      "length": 2
-    },
-    {
-      "pitch": "4C",
-      "step": 1266,
-      "length": 2
-    },
-    {
-      "pitch": "4B",
-      "step": 1268,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1268,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1270,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 1270,
-      "length": 4
-    },
-    {
-      "pitch": "4B",
-      "step": 1274,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1274,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1276,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 1276,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1278,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 1278,
-      "length": 4
-    },
-    {
-      "pitch": "4B",
-      "step": 1282,
-      "length": 2
-    },
-    {
-      "pitch": "4D",
-      "step": 1282,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1284,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 1284,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1286,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 1286,
-      "length": 4
-    },
-    {
-      "pitch": "4G",
-      "step": 1292,
-      "length": 2
-    },
-    {
-      "pitch": "5E",
-      "step": 1292,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1294,
-      "length": 6
-    },
-    {
-      "pitch": "5D",
-      "step": 1294,
-      "length": 6
-    },
-    {
-      "pitch": "4G",
-      "step": 1300,
-      "length": 2
-    },
-    {
-      "pitch": "5E",
-      "step": 1300,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1302,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 1302,
-      "length": 4
-    },
-    {
-      "pitch": "4E",
-      "step": 1306,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 1306,
-      "length": 4
-    },
-    {
-      "pitch": "3A",
-      "step": 1310,
-      "length": 16
-    },
-    {
-      "pitch": "4G",
-      "step": 1310,
-      "length": 14
-    },
-    {
-      "pitch": "3B",
-      "step": 1326,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 1326,
-      "length": 2
-    },
-    {
-      "pitch": "4A",
-      "step": 1328,
-      "length": 4
-    },
-    {
-      "pitch": "4C",
-      "step": 1328,
-      "length": 4
-    },
-    {
-      "pitch": "3B",
-      "step": 1332,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 1332,
-      "length": 2
-    },
-    {
-      "pitch": "4A",
-      "step": 1334,
-      "length": 4
-    },
-    {
-      "pitch": "4C",
-      "step": 1334,
-      "length": 4
-    },
-    {
-      "pitch": "4E",
-      "step": 1338,
-      "length": 4
-    },
-    {
-      "pitch": "4G",
-      "step": 1338,
-      "length": 4
-    },
-    {
-      "pitch": "5E",
-      "step": 1338,
-      "length": 4
-    },
-    {
-      "pitch": "4E",
-      "step": 1342,
-      "length": 18
-    },
-    {
-      "pitch": "5C",
-      "step": 1342,
-      "length": 18
-    },
-    {
-      "pitch": "4D",
-      "step": 1362,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1362,
-      "length": 2
-    },
-    {
-      "pitch": "5D",
-      "step": 1362,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1364,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 1364,
-      "length": 2
-    },
-    {
-      "pitch": "4F",
-      "step": 1366,
-      "length": 2
-    },
-    {
-      "pitch": "5D",
-      "step": 1366,
-      "length": 2
-    },
-    {
-      "pitch": "4E",
-      "step": 1368,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
-      "step": 1368,
-      "length": 2
-    },
-    {
-      "pitch": "4G",
-      "step": 1370,
-      "length": 4
-    },
-    {
-      "pitch": "5E",
-      "step": 1370,
-      "length": 4
-    },
-    {
-      "pitch": "4E",
-      "step": 1374,
       "length": 12
     },
     {
       "pitch": "5C",
-      "step": 1374,
+      "step": 942,
       "length": 10
     },
     {
       "pitch": "4G",
-      "step": 1386,
+      "step": 954,
       "length": 30
     },
     {
       "pitch": "5C",
-      "step": 1386,
+      "step": 954,
       "length": 2
     },
     {
       "pitch": "4B",
-      "step": 1388,
+      "step": 956,
       "length": 2
     },
     {
       "pitch": "5C",
-      "step": 1390,
+      "step": 958,
       "length": 26
     },
     {
       "pitch": "4D",
-      "step": 1394,
+      "step": 962,
       "length": 2
     },
     {
       "pitch": "4E",
-      "step": 1396,
+      "step": 964,
       "length": 2
     },
     {
       "pitch": "5C",
-      "step": 1418,
+      "step": 986,
       "length": 2
     },
     {
       "pitch": "4B",
-      "step": 1420,
+      "step": 988,
       "length": 2
     },
     {
       "pitch": "5C",
-      "step": 1422,
+      "step": 990,
       "length": 26
     },
     {
       "pitch": "4G",
-      "step": 1424,
+      "step": 992,
       "length": 16
     },
     {
       "pitch": "4G",
-      "step": 1440,
+      "step": 1008,
       "length": 12
     },
     {
       "pitch": "4G",
-      "step": 1452,
+      "step": 1020,
       "length": 2
     },
     {
       "pitch": "4F",
-      "step": 1454,
+      "step": 1022,
       "length": 6
     },
     {
       "pitch": "4C",
-      "step": 1456,
+      "step": 1024,
       "length": 14
     },
     {
       "pitch": "4G",
-      "step": 1460,
+      "step": 1028,
       "length": 2
     },
     {
       "pitch": "4F",
-      "step": 1462,
+      "step": 1030,
       "length": 4
     },
     {
       "pitch": "4E",
-      "step": 1466,
+      "step": 1034,
       "length": 4
     },
     {
       "pitch": "4C",
-      "step": 1470,
+      "step": 1038,
       "length": 10
     },
     {
       "pitch": "3A",
-      "step": 1472,
+      "step": 1040,
       "length": 16
     },
     {
       "pitch": "5C",
-      "step": 1482,
+      "step": 1050,
       "length": 2
     },
     {
       "pitch": "4B",
-      "step": 1484,
+      "step": 1052,
       "length": 2
     },
     {
       "pitch": "5C",
-      "step": 1486,
+      "step": 1054,
       "length": 26
     },
     {
       "pitch": "4G",
-      "step": 1488,
+      "step": 1056,
       "length": 16
     },
     {
       "pitch": "4G",
-      "step": 1504,
+      "step": 1072,
       "length": 12
     },
     {
       "pitch": "4G",
-      "step": 1516,
+      "step": 1084,
       "length": 2
     },
     {
       "pitch": "4F",
-      "step": 1518,
+      "step": 1086,
       "length": 6
     },
     {
       "pitch": "4C",
-      "step": 1520,
+      "step": 1088,
       "length": 14
     },
     {
       "pitch": "4G",
-      "step": 1524,
+      "step": 1092,
       "length": 2
     },
     {
       "pitch": "4F",
-      "step": 1526,
+      "step": 1094,
       "length": 4
     },
     {
       "pitch": "4E",
-      "step": 1530,
+      "step": 1098,
       "length": 4
     },
     {
       "pitch": "4C",
-      "step": 1534,
+      "step": 1102,
       "length": 10
     },
     {
       "pitch": "3A",
-      "step": 1536,
+      "step": 1104,
       "length": 16
     },
     {
       "pitch": "5C",
-      "step": 1546,
+      "step": 1114,
       "length": 2
     },
     {
       "pitch": "4B",
-      "step": 1548,
+      "step": 1116,
       "length": 2
     },
     {
       "pitch": "5C",
-      "step": 1550,
+      "step": 1118,
       "length": 34
     },
     {
       "pitch": "4G",
-      "step": 1552,
+      "step": 1120,
       "length": 16
     },
     {
       "pitch": "4C",
-      "step": 1568,
+      "step": 1136,
       "length": 16
     },
     {
       "pitch": "4G",
-      "step": 1568,
+      "step": 1136,
       "length": 16
     },
     {
       "pitch": "3A",
-      "step": 1584,
+      "step": 1152,
       "length": 16
     },
     {
       "pitch": "4E",
-      "step": 1584,
+      "step": 1152,
       "length": 16
     },
     {
       "pitch": "4G",
-      "step": 1584,
+      "step": 1152,
       "length": 16
     },
     {
       "pitch": "5C",
-      "step": 1584,
+      "step": 1152,
       "length": 16
     },
     {
       "pitch": "4B",
-      "step": 1600,
+      "step": 1168,
       "length": 16
     },
     {
       "pitch": "4D",
-      "step": 1600,
+      "step": 1168,
       "length": 16
     },
     {
       "pitch": "4G",
-      "step": 1600,
+      "step": 1168,
       "length": 16
     },
     {
       "pitch": "4G",
-      "step": 1616,
+      "step": 1184,
       "length": 16
     },
     {
       "pitch": "5C",
-      "step": 1616,
+      "step": 1184,
       "length": 16
     },
     {
       "pitch": "5E",
-      "step": 1616,
+      "step": 1184,
       "length": 16
     },
     {
       "pitch": "4B",
-      "step": 1632,
+      "step": 1200,
       "length": 16
     },
     {
       "pitch": "4C",
-      "step": 1632,
+      "step": 1200,
       "length": 16
     },
     {
       "pitch": "4G",
-      "step": 1632,
+      "step": 1200,
       "length": 16
     },
     {
       "pitch": "5D",
-      "step": 1632,
+      "step": 1200,
       "length": 16
     },
     {
       "pitch": "3A",
-      "step": 1648,
+      "step": 1216,
       "length": 16
     },
     {
       "pitch": "4E",
-      "step": 1648,
+      "step": 1216,
       "length": 16
     },
     {
       "pitch": "4G",
-      "step": 1648,
+      "step": 1216,
       "length": 16
     },
     {
       "pitch": "5C",
-      "step": 1648,
+      "step": 1216,
       "length": 16
     },
     {
       "pitch": "4B",
-      "step": 1664,
+      "step": 1232,
       "length": 16
     },
     {
       "pitch": "4D",
-      "step": 1664,
+      "step": 1232,
       "length": 16
     },
     {
       "pitch": "4G",
-      "step": 1664,
+      "step": 1232,
       "length": 16
     },
     {
       "pitch": "4G",
-      "step": 1680,
+      "step": 1248,
       "length": 64
     },
     {
       "pitch": "5C",
-      "step": 1680,
+      "step": 1248,
       "length": 64
     },
     {
       "pitch": "5E",
-      "step": 1680,
+      "step": 1248,
       "length": 64
     }
   ]
