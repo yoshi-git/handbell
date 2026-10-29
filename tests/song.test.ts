@@ -4,6 +4,7 @@ import {
   copySelection,
   createSong,
   deleteSelection,
+  deleteMeasures,
   insertMeasures,
   pasteClip,
   hiddenNoteCount,
@@ -97,6 +98,28 @@ describe('song', () => {
       ['4C', 0],
       ['4D', 16],
     ]);
+  });
+
+  it('deletes a range of measures and pulls later notes forward', () => {
+    let s = createSong(); // 8 steps per measure
+    s = addNote(s, '4C', 0, 12); // rings into measure 2 -> damped at the cut
+    s = addNote(s, '4D', 8); // inside the deleted measures
+    s = addNote(s, '4E', 20);
+    s = addNote(s, '4F', 24);
+    const t = deleteMeasures(s, 1, 2);
+    expect(t.measures).toBe(6);
+    expect(t.notes.map((n) => [n.pitch, n.step, n.length])).toEqual([
+      ['4C', 0, 8],
+      ['4F', 8, 1],
+    ]);
+  });
+
+  it('keeps at least one measure when deleting', () => {
+    const s = addNote(createSong(), '4C', 60);
+    const t = deleteMeasures(s, 0, 99);
+    expect(t.measures).toBe(1);
+    expect(t.notes).toEqual([{ pitch: '4C', step: 4, length: 1 }]);
+    expect(deleteMeasures(t, 0, 1)).toBe(t);
   });
 
   it('copies an area and pastes it at another step, keeping pitches', () => {

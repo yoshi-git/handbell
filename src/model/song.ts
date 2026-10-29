@@ -163,6 +163,26 @@ export function insertMeasures(song: Song, index: number, count = 1): Song {
   };
 }
 
+/**
+ * Deletes `count` measures starting at measure `index` (0-based), pulling later notes
+ * forward. Bells still ringing from before are damped where the deleted measures began.
+ * At least one measure is always kept.
+ */
+export function deleteMeasures(song: Song, index: number, count = 1): Song {
+  const from = Math.max(0, Math.min(index, song.measures - 1));
+  const n = Math.max(0, Math.min(count, song.measures - from, song.measures - 1));
+  if (!n) return song;
+  const at = from * stepsPerMeasure(song);
+  const end = at + n * stepsPerMeasure(song);
+  const notes = song.notes
+    .filter((x) => x.step < at || x.step >= end)
+    .map((x) => {
+      if (x.step >= end) return { ...x, step: x.step - (end - at) };
+      return x.step + x.length > at ? { ...x, length: at - x.step } : x;
+    });
+  return { ...song, measures: song.measures - n, notes };
+}
+
 /** A rectangular area of the score: pitches low..high, steps from..to (exclusive). */
 export interface Selection {
   low: NoteName;

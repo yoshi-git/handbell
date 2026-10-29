@@ -5,6 +5,7 @@ import { SELECTABLE_NOTES, displayName, toMidi, type Accidental } from '../model
 import {
   canTranspose,
   copySelection,
+  deleteMeasures,
   deleteSelection,
   hiddenNoteCount,
   insertMeasures,
@@ -75,6 +76,15 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   const [tool, setTool] = useState<'note' | 'select'>('note');
   const [selection, setSelection] = useState<Selection | null>(null);
   const [clip, setClip] = useState<Clip | null>(clipboard);
+  /** Measures to delete, 1-based and inclusive as shown on screen. */
+  const [delRange, setDelRange] = useState({ from: 1, to: 1 });
+  const delValid =
+    Number.isInteger(delRange.from) &&
+    Number.isInteger(delRange.to) &&
+    delRange.from >= 1 &&
+    delRange.from <= delRange.to &&
+    delRange.to <= song.measures &&
+    delRange.to - delRange.from + 1 < song.measures;
 
   const change = useCallback((next: Song, transient = false) => {
     setHist((h) => {
@@ -362,6 +372,34 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
                 onClick={() => change(insertMeasures(song, Math.floor(startStep / spm)))}
               >
                 {Math.min(Math.floor(startStep / spm), song.measures) + 1}小節目に空白小節を挿入
+              </button>
+            </label>
+            <label>
+              小節を削除
+              <input
+                type="number"
+                min={1}
+                max={song.measures}
+                value={delRange.from}
+                onChange={(e) => setDelRange({ ...delRange, from: Number(e.target.value) })}
+              />
+              〜
+              <input
+                type="number"
+                min={1}
+                max={song.measures}
+                value={delRange.to}
+                onChange={(e) => setDelRange({ ...delRange, to: Number(e.target.value) })}
+              />
+              <button
+                title="指定した範囲の小節を削除し、後ろの小節を詰める"
+                disabled={!delValid}
+                onClick={() => {
+                  change(deleteMeasures(song, delRange.from - 1, delRange.to - delRange.from + 1));
+                  setDelRange({ from: delRange.from, to: delRange.from });
+                }}
+              >
+                削除
               </button>
             </label>
             <label>
