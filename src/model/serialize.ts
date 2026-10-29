@@ -15,7 +15,9 @@ function posInt(v: unknown, field: string, min = 1): number {
 export function parseSong(data: unknown): Song {
   if (!data || typeof data !== 'object') fail('オブジェクトではありません');
   const d = data as Record<string, unknown>;
-  if (d.version !== 1) fail('未対応のバージョンです');
+  // version 1 had no `accidental`; it always displayed sharps.
+  if (d.version !== 1 && d.version !== 2) fail('未対応のバージョンです');
+  if (d.accidental !== undefined && d.accidental !== 'sharp' && d.accidental !== 'flat') fail('accidental が不正です');
   const range = d.range as Record<string, unknown> | undefined;
   if (!range || !isValidNote(String(range.low)) || !isValidNote(String(range.high))) fail('音域が不正です');
   const assignments: Record<string, string> = {};
@@ -35,7 +37,7 @@ export function parseSong(data: unknown): Song {
     };
   });
   return {
-    version: 1,
+    version: 2,
     id: typeof d.id === 'string' && d.id ? d.id : Math.random().toString(36).slice(2),
     title: typeof d.title === 'string' ? d.title : '無題',
     tempo: posInt(d.tempo, 'tempo'),
@@ -43,6 +45,7 @@ export function parseSong(data: unknown): Song {
     subdivisions: posInt(d.subdivisions, 'subdivisions'),
     measures: posInt(d.measures, 'measures'),
     range: { low: normalize(String(range.low)), high: normalize(String(range.high)) },
+    accidental: d.accidental === 'flat' ? 'flat' : 'sharp',
     assignments,
     notes,
   };

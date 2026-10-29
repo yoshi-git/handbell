@@ -25,9 +25,23 @@ describe('serialize', () => {
 
   it('rejects invalid data', () => {
     expect(() => songFromJson('not json')).toThrow();
-    expect(() => parseSong({ version: 2 })).toThrow();
+    expect(() => parseSong({ ...sample(), version: 3 })).toThrow();
+    expect(() => parseSong({ ...sample(), accidental: 'natural' })).toThrow();
     expect(() => parseSong({ ...sample(), notes: [{ pitch: 'H9', step: 0, length: 1 }] })).toThrow();
     expect(() => decodeFromUrl('garbage')).toThrow();
+  });
+
+  it('keeps the flat display setting', () => {
+    const s = { ...sample(), accidental: 'flat' as const };
+    expect(songFromJson(songToJson(s)).accidental).toBe('flat');
+    expect(decodeFromUrl(encodeForUrl(s)).accidental).toBe('flat');
+  });
+
+  it('migrates version 1 data (no accidental) to sharps', () => {
+    const { accidental: _a, ...v1 } = { ...sample(), version: 1 };
+    const s = parseSong(v1);
+    expect(s.version).toBe(2);
+    expect(s.accidental).toBe('sharp');
   });
 
   it('normalizes flat spellings on import', () => {

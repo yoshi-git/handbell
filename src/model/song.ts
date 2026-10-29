@@ -9,7 +9,7 @@ export function newId(): string {
 
 export function createSong(title = '新しい曲'): Song {
   return {
-    version: 1,
+    version: 2,
     id: newId(),
     title,
     tempo: 100,
@@ -17,6 +17,7 @@ export function createSong(title = '新しい曲'): Song {
     subdivisions: 2,
     measures: 8,
     range: { ...DEFAULT_RANGE },
+    accidental: 'sharp',
     assignments: {},
     notes: [],
   };

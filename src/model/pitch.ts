@@ -1,4 +1,6 @@
-import type { NoteName } from './types';
+import type { Accidental, NoteName } from './types';
+
+export type { Accidental };
 
 const SHARP_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const FLAT_NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
@@ -50,8 +52,6 @@ export function notesInRange(low: NoteName, high: NoteName): NoteName[] {
 export function frequency(name: NoteName): number {
   return 440 * Math.pow(2, (toMidi(name) - 69) / 12);
 }
-
-export type Accidental = 'sharp' | 'flat';
 
 /** Display label, e.g. "4C#" -> "4C♯" or "4D♭". */
 export function displayName(name: NoteName, accidental: Accidental = 'sharp'): string {

@@ -110,6 +110,25 @@ describe('musicxml', () => {
     }
   });
 
+  it('spells black keys with flats when the song is set to flats', () => {
+    const s = { ...sample(), accidental: 'flat' as const };
+    const xml = songToMusicXml(s);
+    expect(xml).toContain('<pitch><step>E</step><alter>-1</alter><octave>5</octave></pitch>');
+    expect(xml).not.toContain('<alter>1</alter>');
+    const { song } = songFromMusicXml(xml);
+    expect(comparable(song)).toEqual(comparable(s));
+  });
+
+  it('picks flats for files in a flat key', () => {
+    const xml = (fifths: number) => `<?xml version="1.0" encoding="UTF-8"?>
+<score-partwise version="4.0"><part-list><score-part id="P1"/></part-list><part id="P1"><measure number="1">
+  <attributes><divisions>1</divisions><key><fifths>${fifths}</fifths></key><time><beats>4</beats><beat-type>4</beat-type></time></attributes>
+  <note><pitch><step>E</step><alter>-1</alter><octave>4</octave></pitch><duration>4</duration></note>
+</measure></part></score-partwise>`;
+    expect(songFromMusicXml(xml(-3)).song.accidental).toBe('flat');
+    expect(songFromMusicXml(xml(2)).song.accidental).toBe('sharp');
+  });
+
   it('reads files from notation software', () => {
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 4.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">

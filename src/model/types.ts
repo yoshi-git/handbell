@@ -9,8 +9,10 @@ export interface Note {
   length: number;
 }
 
+export type Accidental = 'sharp' | 'flat';
+
 export interface Song {
-  version: 1;
+  version: 2;
   id: string;
   title: string;
   /** Quarter-note beats per minute. */
@@ -20,6 +22,8 @@ export interface Song {
   subdivisions: number;
   measures: number;
   range: { low: NoteName; high: NoteName };
+  /** How black keys are labelled on screen and in exports. Storage always uses sharps. */
+  accidental: Accidental;
   /** Bell (note name) -> player name. */
   assignments: Record<NoteName, string>;
   notes: Note[];

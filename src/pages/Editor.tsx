@@ -68,7 +68,6 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   const [hist, setHist] = useState<History>({ past: [], present: initial, future: [] });
   const song = hist.present;
   const [mode, setMode] = useState<'edit' | 'play'>(readOnly ? 'play' : 'edit');
-  const [accidental, setAccidental] = useState<Accidental>(() => loadPref('bellscore.accidental', 'sharp'));
   const [stepWidth, setStepWidth] = useState(() => Number(loadPref('bellscore.zoom', '24')) || 24);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   /** Phones: settings and file actions stay folded away until the ⋯ button is pressed. */
@@ -106,6 +105,7 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   }, [song.title]);
 
   const players = useMemo(() => listPlayers(song), [song]);
+  const accidental = song.accidental;
 
   // ---- playback ----
   const player = useRef<Player>();
@@ -445,10 +445,7 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
           表記
           <select
             value={accidental}
-            onChange={(e) => {
-              setAccidental(e.target.value as Accidental);
-              savePref('bellscore.accidental', e.target.value);
-            }}
+            onChange={(e) => change({ ...song, accidental: e.target.value as Accidental })}
           >
             <option value="sharp">♯</option>
             <option value="flat">♭</option>

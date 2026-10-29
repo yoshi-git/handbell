@@ -1,7 +1,7 @@
 import { fromMidi, toMidi } from './pitch';
 import { parseSong } from './serialize';
 import { DEFAULT_RANGE, hiddenNoteCount, inRange, newId, stepsPerMeasure, totalSteps } from './song';
-import type { Note, Song } from './types';
+import type { Accidental, Note, Song } from './types';
 import { child, childText, children, escapeXml, parseXml, type XmlElement } from './xml';
 
 /*
@@ -107,10 +107,12 @@ function voicesFor(notes: Note[]): Voice[] {
   return voices.length ? voices : [[]];
 }
 
-function pitchXml(midi: number): string {
+function pitchXml(midi: number, accidental: Accidental): string {
   const name = fromMidi(midi); // e.g. "4C#"
-  const alter = name.endsWith('#') ? '<alter>1</alter>' : '';
-  return `<pitch><step>${name[1]}</step>${alter}<octave>${name[0]}</octave></pitch>`;
+  if (!name.endsWith('#')) return `<pitch><step>${name[1]}</step><octave>${name[0]}</octave></pitch>`;
+  // A black key is never next to an octave boundary, so the flat spelling keeps the octave.
+  if (accidental === 'flat') return `<pitch><step>${fromMidi(midi + 1)[1]}</step><alter>-1</alter><octave>${name[0]}</octave></pitch>`;
+  return `<pitch><step>${name[1]}</step><alter>1</alter><octave>${name[0]}</octave></pitch>`;
 }
 
 function pieceXml(p: Piece): string {
@@ -120,7 +122,7 @@ function pieceXml(p: Piece): string {
 }
 
 /** Writes one voice's notes and rests for the measure [start, end). */
-function voiceMeasureXml(voice: Voice, start: number, end: number, voiceNo: number, staff: number, primary: boolean, sub: number): string {
+function voiceMeasureXml(voice: Voice, start: number, end: number, voiceNo: number, staff: number, primary: boolean, sub: number, accidental: Accidental): string {
   const out: string[] = [];
   const rest = (steps: number) => {
     if (primary && steps === end - start) {
@@ -147,7 +149,7 @@ function voiceMeasureXml(voice: Voice, start: number, end: number, voiceNo: numb
         const ties = (tieStop ? '<tie type="stop"/>' : '') + (tieStart ? '<tie type="start"/>' : '');
         const tied = (tieStop ? '<tied type="stop"/>' : '') + (tieStart ? '<tied type="start"/>' : '');
         out.push(
-          `<note>${j ? '<chord/>' : ''}${pitchXml(m)}<duration>${p.steps}</duration>${ties}<voice>${voiceNo}</voice>` +
+          `<note>${j ? '<chord/>' : ''}${pitchXml(m, accidental)}<duration>${p.steps}</duration>${ties}<voice>${voiceNo}</voice>` +
             `${pieceXml(p)}<staff>${staff}</staff>${tied ? `<notations>${tied}</notations>` : ''}</note>`,
         );
       });
@@ -175,6 +177,7 @@ export function songToMusicXml(song: Song): string {
     [`${MISC_PREFIX}range-low`, song.range.low],
     [`${MISC_PREFIX}range-high`, song.range.high],
     [`${MISC_PREFIX}subdivisions`, String(song.subdivisions)],
+    [`${MISC_PREFIX}accidental`, song.accidental],
     ...Object.entries(song.assignments).map(([pitch, player]) => [`${MISC_PREFIX}player-${pitch}`, player]),
   ]
     .map(([k, v]) => `<miscellaneous-field name="${escapeXml(k)}">${escapeXml(v)}</miscellaneous-field>`)
@@ -198,7 +201,7 @@ export function songToMusicXml(song: Song): string {
       voices.forEach((voice, v) => {
         const primary = v === 0;
         if (!primary && !voice.some((c) => c.step < start + spm && c.step + c.length > start)) return;
-        parts.push(voiceMeasureXml(voice, start, start + spm, s * 4 + v + 1, s + 1, primary, sub));
+        parts.push(voiceMeasureXml(voice, start, start + spm, s * 4 + v + 1, s + 1, primary, sub, song.accidental));
       });
     });
     body.push(parts.join(`\n<backup><duration>${spm}</duration></backup>\n`));
@@ -313,6 +316,7 @@ export function songFromMusicXml(text: string): MusicXmlImport {
   }
 
   let time: { beats: number; beatType: number } | undefined;
+  let fifths: number | undefined;
   let tempo: number | undefined;
   const raw: RawNote[] = [];
   let firstMeasureLen: number | undefined;
@@ -342,6 +346,7 @@ export function songFromMusicXml(text: string): MusicXmlImport {
             const total = beats.split('+').reduce((s, b) => s + Number(b), 0);
             if (total > 0) time = { beats: total, beatType };
           }
+          fifths ??= num(child(el, 'key'), 'fifths');
           const tr = child(el, 'transpose');
           if (tr) chromatic = num(tr, 'chromatic') ?? 0;
         } else if (el.name === 'backup') {
@@ -467,7 +472,7 @@ export function songFromMusicXml(text: string): MusicXmlImport {
   const end = Math.max(Math.round((totalLen + shift) * sub), ...notes.map((n) => n.step + n.length));
   const work = childText(child(score, 'work'), 'work-title');
   const song = parseSong({
-    version: 1,
+    version: 2,
     id: newId(),
     title: work || childText(score, 'movement-title') || '無題',
     tempo: Math.min(300, Math.max(20, Math.round(tempo ?? 100))),
@@ -475,6 +480,8 @@ export function songFromMusicXml(text: string): MusicXmlImport {
     subdivisions: sub,
     measures: Math.max(1, Math.ceil(end / spm)),
     range: { low, high },
+    // Saved by this app, else follow the key signature (flat keys read better with ♭).
+    accidental: misc.get('accidental') === 'flat' || (!misc.has('accidental') && (fifths ?? 0) < 0) ? 'flat' : 'sharp',
     assignments,
     notes: notes.sort((a, b) => a.step - b.step || toMidi(b.pitch) - toMidi(a.pitch)),
   });
