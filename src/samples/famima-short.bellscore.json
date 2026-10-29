@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "id": "sample-famima-short",
+  "title": "ファミマ入店音（バトル風）（ショート）",
+  "tempo": 180,
+  "beatsPerMeasure": 4,
+  "subdivisions": 2,
+  "measures": 10,
+  "range": {
+    "low": "3A",
+    "high": "5E"
+  },
+  "assignments": {},
+  "notes": [
+    {
+      "pitch": "5C#",
+      "step": 0,
+      "length": 3
+    },
+    {
+      "pitch": "4A",
+      "step": 3,
+      "length": 3
+    },
+    {
+      "pitch": "4E",
+      "step": 6,
+      "length": 3
+    },
+    {
+      "pitch": "4A",
+      "step": 9,
+      "length": 3
+    },
+    {
+      "pitch": "4B",
+      "step": 12,
+      "length": 3
+    },
+    {
+      "pitch": "5E",
+      "step": 15,
+      "length": 9
+    },
+    {
+      "pitch": "4B",
+      "step": 24,
+      "length": 3
+    },
+    {
+      "pitch": "5C#",
+      "step": 27,
+      "length": 3
+    },
+    {
+      "pitch": "4B",
+      "step": 30,
+      "length": 3
+    },
+    {
+      "pitch": "4E",
+      "step": 33,
+      "length": 3
+    },
+    {
+      "pitch": "4A",
+      "step": 36,
+      "length": 12
+    },
+    {
+      "pitch": "5C#",
+      "step": 48,
+      "length": 2
+    },
+    {
+      "pitch": "4A",
+      "step": 48,
+      "length": 2
+    },
+    {
+      "pitch": "4F#",
+      "step": 48,
+      "length": 4
+    },
+    {
+      "pitch": "4A",
+      "step": 50,
+      "length": 2
+    },
+    {
+      "pitch": "4E",
+      "step": 52,
+      "length": 2
+    },
+    {
+      "pitch": "4A",
+      "step": 54,
+      "length": 2
+    },
+    {
+      "pitch": "4B",
+      "step": 56,
+      "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 56,
+      "length": 4
+    },
+    {
+      "pitch": "4E",
+      "step": 56,
+      "length": 4
+    },
+    {
+      "pitch": "5E",
+      "step": 58,
+      "length": 6
+    },
+    {
+      "pitch": "4B",
+      "step": 60,
+      "length": 4
+    },
+    {
+      "pitch": "4E",
+      "step": 60,
+      "length": 4
+    },
+    {
+      "pitch": "4B",
+      "step": 64,
+      "length": 2
+    },
+    {
+      "pitch": "4A",
+      "step": 64,
+      "length": 4
+    },
+    {
+      "pitch": "4D",
+      "step": 64,
+      "length": 4
+    },
+    {
+      "pitch": "5C#",
+      "step": 66,
+      "length": 2
+    },
+    {
+      "pitch": "4B",
+      "step": 68,
+      "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 68,
+      "length": 4
+    },
+    {
+      "pitch": "4E",
+      "step": 68,
+      "length": 2
+    },
+    {
+      "pitch": "4E",
+      "step": 70,
+      "length": 2
+    },
+    {
+      "pitch": "4A",
+      "step": 72,
+      "length": 8
+    },
+    {
+      "pitch": "4E",
+      "step": 72,
+      "length": 4
+    },
+    {
+      "pitch": "3A",
+      "step": 72,
+      "length": 4
+    },
+    {
+      "pitch": "4E",
+      "step": 76,
+      "length": 4
+    },
+    {
+      "pitch": "3A",
+      "step": 76,
+      "length": 4
+    }
+  ]
+}

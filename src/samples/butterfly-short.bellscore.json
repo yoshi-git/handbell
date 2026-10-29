@@ -1,0 +1,381 @@
+{
+  "version": 1,
+  "id": "sample-butterfly-short",
+  "title": "Butterfly（ショート）",
+  "tempo": 112,
+  "beatsPerMeasure": 4,
+  "subdivisions": 4,
+  "measures": 9,
+  "range": {
+    "low": "3A",
+    "high": "5E"
+  },
+  "assignments": {},
+  "notes": [
+    {
+      "pitch": "5C",
+      "step": 0,
+      "length": 8
+    },
+    {
+      "pitch": "4A",
+      "step": 0,
+      "length": 8
+    },
+    {
+      "pitch": "4F",
+      "step": 0,
+      "length": 8
+    },
+    {
+      "pitch": "4G#",
+      "step": 12,
+      "length": 2
+    },
+    {
+      "pitch": "4G",
+      "step": 14,
+      "length": 2
+    },
+    {
+      "pitch": "4G",
+      "step": 16,
+      "length": 4
+    },
+    {
+      "pitch": "4D#",
+      "step": 16,
+      "length": 8
+    },
+    {
+      "pitch": "4G#",
+      "step": 20,
+      "length": 2
+    },
+    {
+      "pitch": "4G",
+      "step": 22,
+      "length": 2
+    },
+    {
+      "pitch": "4G",
+      "step": 24,
+      "length": 4
+    },
+    {
+      "pitch": "4D",
+      "step": 24,
+      "length": 8
+    },
+    {
+      "pitch": "4G#",
+      "step": 28,
+      "length": 2
+    },
+    {
+      "pitch": "4G",
+      "step": 30,
+      "length": 2
+    },
+    {
+      "pitch": "4A#",
+      "step": 32,
+      "length": 8
+    },
+    {
+      "pitch": "4G",
+      "step": 32,
+      "length": 4
+    },
+    {
+      "pitch": "3A#",
+      "step": 32,
+      "length": 8
+    },
+    {
+      "pitch": "4C#",
+      "step": 36,
+      "length": 4
+    },
+    {
+      "pitch": "4C",
+      "step": 40,
+      "length": 4
+    },
+    {
+      "pitch": "4A#",
+      "step": 44,
+      "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 46,
+      "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 48,
+      "length": 4
+    },
+    {
+      "pitch": "4F",
+      "step": 48,
+      "length": 8
+    },
+    {
+      "pitch": "4A#",
+      "step": 52,
+      "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 54,
+      "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 56,
+      "length": 4
+    },
+    {
+      "pitch": "4D#",
+      "step": 56,
+      "length": 8
+    },
+    {
+      "pitch": "4A#",
+      "step": 60,
+      "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 62,
+      "length": 2
+    },
+    {
+      "pitch": "5C",
+      "step": 64,
+      "length": 8
+    },
+    {
+      "pitch": "4G#",
+      "step": 64,
+      "length": 4
+    },
+    {
+      "pitch": "4D",
+      "step": 64,
+      "length": 8
+    },
+    {
+      "pitch": "4G#",
+      "step": 68,
+      "length": 2
+    },
+    {
+      "pitch": "4G",
+      "step": 70,
+      "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 72,
+      "length": 8
+    },
+    {
+      "pitch": "4F",
+      "step": 72,
+      "length": 4
+    },
+    {
+      "pitch": "4C",
+      "step": 72,
+      "length": 8
+    },
+    {
+      "pitch": "4F",
+      "step": 76,
+      "length": 2
+    },
+    {
+      "pitch": "4D#",
+      "step": 78,
+      "length": 2
+    },
+    {
+      "pitch": "4A#",
+      "step": 80,
+      "length": 8
+    },
+    {
+      "pitch": "4F",
+      "step": 80,
+      "length": 8
+    },
+    {
+      "pitch": "4D",
+      "step": 80,
+      "length": 4
+    },
+    {
+      "pitch": "4D",
+      "step": 84,
+      "length": 2
+    },
+    {
+      "pitch": "4C",
+      "step": 86,
+      "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 88,
+      "length": 8
+    },
+    {
+      "pitch": "3A#",
+      "step": 88,
+      "length": 4
+    },
+    {
+      "pitch": "4F",
+      "step": 92,
+      "length": 2
+    },
+    {
+      "pitch": "4D#",
+      "step": 94,
+      "length": 2
+    },
+    {
+      "pitch": "4D#",
+      "step": 96,
+      "length": 4
+    },
+    {
+      "pitch": "3A#",
+      "step": 96,
+      "length": 8
+    },
+    {
+      "pitch": "4A#",
+      "step": 100,
+      "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 102,
+      "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 104,
+      "length": 4
+    },
+    {
+      "pitch": "4D#",
+      "step": 104,
+      "length": 8
+    },
+    {
+      "pitch": "4C",
+      "step": 104,
+      "length": 8
+    },
+    {
+      "pitch": "4A#",
+      "step": 108,
+      "length": 2
+    },
+    {
+      "pitch": "4G#",
+      "step": 110,
+      "length": 2
+    },
+    {
+      "pitch": "4G",
+      "step": 112,
+      "length": 4
+    },
+    {
+      "pitch": "4D#",
+      "step": 112,
+      "length": 8
+    },
+    {
+      "pitch": "3A#",
+      "step": 112,
+      "length": 8
+    },
+    {
+      "pitch": "4G#",
+      "step": 116,
+      "length": 2
+    },
+    {
+      "pitch": "4G",
+      "step": 118,
+      "length": 2
+    },
+    {
+      "pitch": "4F",
+      "step": 120,
+      "length": 4
+    },
+    {
+      "pitch": "4D",
+      "step": 120,
+      "length": 8
+    },
+    {
+      "pitch": "3A#",
+      "step": 120,
+      "length": 8
+    },
+    {
+      "pitch": "4G",
+      "step": 124,
+      "length": 2
+    },
+    {
+      "pitch": "4F",
+      "step": 126,
+      "length": 2
+    },
+    {
+      "pitch": "5C",
+      "step": 128,
+      "length": 4
+    },
+    {
+      "pitch": "4D#",
+      "step": 128,
+      "length": 8
+    },
+    {
+      "pitch": "4C",
+      "step": 128,
+      "length": 4
+    },
+    {
+      "pitch": "4G#",
+      "step": 140,
+      "length": 2
+    },
+    {
+      "pitch": "4D#",
+      "step": 140,
+      "length": 4
+    },
+    {
+      "pitch": "3A#",
+      "step": 140,
+      "length": 4
+    },
+    {
+      "pitch": "4G",
+      "step": 142,
+      "length": 2
+    }
+  ]
+}
