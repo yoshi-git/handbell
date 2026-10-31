@@ -76,7 +76,8 @@ export function ScoreGrid(props: ScoreGridProps) {
     return map;
   }, [song.notes, fromStep, toStep]);
 
-  const counts = useMemo(() => (props.showCounts ? strikeCounts(song) : null), [props.showCounts, song]);
+  const strikes = useMemo(() => strikeCounts(song), [song]);
+  const counts = props.showCounts ? strikes : null;
 
   // Latest song for pointer handlers that outlive a render.
   const songRef = useRef(song);
@@ -140,6 +141,7 @@ export function ScoreGrid(props: ScoreGridProps) {
           notes={byPitch.get(pitch)}
           active={activePitches?.has(pitch) ?? false}
           count={counts ? counts.get(pitch) ?? 0 : undefined}
+          unused={!strikes.has(pitch)}
           laneStyle={laneStyle}
           {...rowProps}
           fromStep={fromStep}
@@ -185,6 +187,8 @@ interface RowProps extends Omit<ScoreGridProps, 'activePitches' | 'playheadRef' 
   active: boolean;
   /** Strikes of this bell in the song; undefined hides the column. */
   count: number | undefined;
+  /** Never struck in the song: an empty player cell reads 未利用 (grey). */
+  unused: boolean;
   laneStyle: CSSProperties;
   fromStep: number;
   songRef: React.MutableRefObject<Song>;
@@ -280,12 +284,16 @@ const GridRow = memo(function GridRow(p: RowProps) {
     <div className={`grid-row${black ? ' black' : ''}${p.active ? ' active' : ''}`}>
       <div className="cell-player" style={{ color: p.color }}>
         {p.readOnly || !p.onAssign ? (
-          <span className="player-name" title={p.player}>
-            {name}
-            {memo && <span className="player-memo">{memo}</span>}
-          </span>
+          p.player || !p.unused ? (
+            <span className="player-name" title={p.player}>
+              {name}
+              {memo && <span className="player-memo">{memo}</span>}
+            </span>
+          ) : (
+            <span className="player-unused">未利用</span>
+          )
         ) : (
-          <PlayerInput pitch={p.pitch} value={p.player ?? ''} onCommit={p.onAssign} />
+          <PlayerInput pitch={p.pitch} value={p.player ?? ''} unused={p.unused} onCommit={p.onAssign} />
         )}
       </div>
       <button
@@ -326,7 +334,12 @@ const GridRow = memo(function GridRow(p: RowProps) {
   );
 });
 
-function PlayerInput(props: { pitch: NoteName; value: string; onCommit: (pitch: NoteName, v: string) => void }) {
+function PlayerInput(props: {
+  pitch: NoteName;
+  value: string;
+  unused: boolean;
+  onCommit: (pitch: NoteName, v: string) => void;
+}) {
   const [draft, setDraft] = useState<string | null>(null);
   const commit = () => {
     if (draft !== null && draft !== props.value) props.onCommit(props.pitch, draft.trim());
@@ -334,10 +347,10 @@ function PlayerInput(props: { pitch: NoteName; value: string; onCommit: (pitch: 
   };
   return (
     <input
-      className="player-input"
+      className={`player-input${props.unused ? ' unused' : ''}`}
       value={draft ?? props.value}
       title={props.value || undefined}
-      placeholder="名前:メモ"
+      placeholder={props.unused ? '未利用' : '名前:メモ'}
       list="player-names"
       onChange={(e) => setDraft(e.target.value)}
       onBlur={commit}

@@ -145,12 +145,14 @@ input[type='number'] { width: 64px; }
 }
 .player-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .player-memo { margin-left: 4px; color: var(--muted); font-weight: 400; }
+.player-unused { color: var(--unassigned); font-weight: 400; }
 .player-input {
   width: 100%; border: 1px solid transparent; background: transparent; font-weight: 600;
   color: inherit; padding: 1px 4px; border-radius: 4px;
 }
 .player-input:hover, .player-input:focus { border-color: var(--border); background: var(--panel); }
 .player-input::placeholder { color: var(--muted); font-weight: 400; opacity: 0.5; }
+.player-input.unused::placeholder { color: var(--unassigned); opacity: 1; }
 
 .lane {
   position: relative; flex: none; height: 100%;
