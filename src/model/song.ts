@@ -177,6 +177,31 @@ export function bellsOf(song: Song, player: string): NoteName[] {
   return rows(song).filter((p) => playerName(song.assignments[p]) === player);
 }
 
+export interface PlayerStat {
+  /** '' for bells that are played but not assigned to anyone. */
+  name: string;
+  /** Bells in the range, high -> low. */
+  bells: NoteName[];
+  /** Total strikes on those bells. */
+  strikes: number;
+}
+
+/**
+ * For each player (row order): the bells they hold within the range and how many times
+ * those bells are struck. Played bells with no player come last under the name ''.
+ */
+export function playerStats(song: Song): PlayerStat[] {
+  const counts = strikeCounts(song);
+  const strikes = (bells: NoteName[]) => bells.reduce((sum, b) => sum + (counts.get(b) ?? 0), 0);
+  const stats = players(song).map((name) => {
+    const bells = bellsOf(song, name);
+    return { name, bells, strikes: strikes(bells) };
+  });
+  const loose = rows(song).filter((p) => !playerName(song.assignments[p]) && counts.has(p));
+  if (loose.length) stats.push({ name: '', bells: loose, strikes: strikes(loose) });
+  return stats;
+}
+
 /** Inserts `count` empty measures before measure `index` (0-based), shifting later notes. */
 export function insertMeasures(song: Song, index: number, count = 1): Song {
   const at = Math.max(0, Math.min(index, song.measures)) * stepsPerMeasure(song);

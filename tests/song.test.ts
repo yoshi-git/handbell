@@ -12,6 +12,7 @@ import {
   bellsOf,
   playerMemo,
   playerName,
+  playerStats,
   players,
   rows,
   setAssignment,
@@ -81,6 +82,26 @@ describe('song', () => {
     expect(players(s)).toEqual(['大泉']);
     expect(bellsOf(s, '大泉')).toEqual(['5E', '5C']);
     expect(s.assignments['5E']).toBe('大泉:高い方'); // stored as typed
+  });
+
+  it('sums bells and strikes per player, then unassigned played bells', () => {
+    let s = createSong();
+    s = addNote(s, '5E', 0);
+    s = addNote(s, '5E', 4);
+    s = addNote(s, '5C', 8);
+    s = addNote(s, '4C', 0);
+    s = addNote(s, '3A', 2);
+    s = addNote(s, '3A', 1000); // past the song's end: not counted
+    s = setAssignment(s, '5E', '大泉:高い方');
+    s = setAssignment(s, '5C', '大泉');
+    s = setAssignment(s, '4D', '黒部'); // held but never struck
+    s = setAssignment(s, '3A', '黒部');
+    expect(playerStats(s)).toEqual([
+      { name: '大泉', bells: ['5E', '5C'], strikes: 3 },
+      { name: '黒部', bells: ['4D', '3A'], strikes: 1 },
+      { name: '', bells: ['4C'], strikes: 1 },
+    ]);
+    expect(playerStats(createSong())).toEqual([]);
   });
 
   it('counts notes hidden by a narrowed range', () => {

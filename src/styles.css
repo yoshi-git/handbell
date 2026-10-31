@@ -119,6 +119,15 @@ input[type='number'] { width: 64px; }
 /* Room after the last measure so the end of the song can also reach the fixed playhead. */
 .grid-scroll.flowing .score-grid { margin-right: 70%; }
 
+/* Per-player totals under the score; stays at the left edge while the score scrolls sideways. */
+.player-stats-wrap { position: sticky; left: 0; padding: 12px 16px 0; }
+.player-stats { border-collapse: collapse; font-size: 0.85em; }
+.player-stats th, .player-stats td { padding: 3px 10px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+.player-stats thead th { color: var(--muted); font-size: 0.9em; }
+.player-stats td { text-align: right; font-variant-numeric: tabular-nums; }
+.player-stats td.bells { text-align: left; color: var(--muted); }
+.player-stats tr.unassigned th { font-weight: 400; }
+
 /* ---------- score grid ---------- */
 .score-grid { position: relative; display: inline-block; min-width: 100%; --row-h: 26px; }
 .grid-row { display: flex; height: var(--row-h); background: var(--row-white); }
@@ -241,5 +250,6 @@ input[type='number'] { width: 64px; }
   .print-only p { margin: 0 0 4mm; font-size: 9pt; }
   .print-only .score-grid { --row-h: 18px; font-size: 8pt; margin-bottom: 6mm; break-inside: avoid; display: block; width: max-content; min-width: 0; }
   .print-only .player-input { display: none; }
+  .print-only .player-stats { font-size: 8pt; break-inside: avoid; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }

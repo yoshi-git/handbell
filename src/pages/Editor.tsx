@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Player } from '../audio/scheduler';
+import { PlayerStats } from '../components/PlayerStats';
 import { ScoreGrid } from '../components/ScoreGrid';
 import { SELECTABLE_NOTES, displayName, toMidi, type Accidental } from '../model/pitch';
 import {
@@ -680,6 +681,9 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
             onSelect={setSelection}
             showCounts
           />
+          <div className="player-stats-wrap">
+            <PlayerStats song={song} players={players} accidental={accidental} />
+          </div>
         </div>
       </div>
 
@@ -752,6 +756,7 @@ function PrintView({ song, players, accidental }: { song: Song; players: string[
         ♩={song.tempo}　{song.beatsPerMeasure}/4拍子
       </p>
       {lines}
+      <PlayerStats song={song} players={players} accidental={accidental} />
     </div>
   );
 }
