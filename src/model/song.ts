@@ -149,18 +149,32 @@ export function transpose(song: Song, semitones: number): Song {
   return { ...song, assignments, notes: sortNotes(song.notes.map((n) => ({ ...n, pitch: shift(n.pitch) }))) };
 }
 
+const MEMO_SEP = /[:：]/;
+
+/** An assignment may be "名前:メモ"; only the text before the first ":" (or "：") names the player. */
+export function playerName(assignment: string | undefined): string {
+  return (assignment ?? '').split(MEMO_SEP, 1)[0].trim();
+}
+
+/** The memo after the first ":" (or "："), or '' if there is none. */
+export function playerMemo(assignment: string | undefined): string {
+  const text = assignment ?? '';
+  const i = text.search(MEMO_SEP);
+  return i < 0 ? '' : text.slice(i + 1).trim();
+}
+
 /** Distinct player names in row order (high -> low), for stable colors and listing. */
 export function players(song: Song): string[] {
   const out: string[] = [];
   for (const pitch of rows(song)) {
-    const p = song.assignments[pitch];
+    const p = playerName(song.assignments[pitch]);
     if (p && !out.includes(p)) out.push(p);
   }
   return out;
 }
 
 export function bellsOf(song: Song, player: string): NoteName[] {
-  return rows(song).filter((p) => song.assignments[p] === player);
+  return rows(song).filter((p) => playerName(song.assignments[p]) === player);
 }
 
 /** Inserts `count` empty measures before measure `index` (0-based), shifting later notes. */

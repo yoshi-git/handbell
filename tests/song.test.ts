@@ -9,6 +9,9 @@ import {
   pasteClip,
   hiddenNoteCount,
   noteAt,
+  bellsOf,
+  playerMemo,
+  playerName,
   players,
   rows,
   setAssignment,
@@ -59,6 +62,25 @@ describe('song', () => {
     expect(players(s)).toEqual(['田中', '鈴木']);
     s = setAssignment(s, '3A', ' ');
     expect(players(s)).toEqual(['田中']);
+  });
+
+  it('reads the player name left of ":" and keeps the rest as a memo', () => {
+    expect(playerName('大泉:右手で2本')).toBe('大泉');
+    expect(playerMemo('大泉:右手で2本')).toBe('右手で2本');
+    expect(playerName(' 黒部 ： 持ち替え ')).toBe('黒部'); // full-width colon, spaces
+    expect(playerMemo(' 黒部 ： 持ち替え ')).toBe('持ち替え');
+    expect(playerName('小幡')).toBe('小幡');
+    expect(playerMemo('小幡')).toBe('');
+    expect(playerMemo('a:b:c')).toBe('b:c');
+    expect(playerName(undefined)).toBe('');
+
+    let s = createSong();
+    s = setAssignment(s, '5E', '大泉:高い方');
+    s = setAssignment(s, '5C', '大泉');
+    s = setAssignment(s, '4C', ':メモだけ');
+    expect(players(s)).toEqual(['大泉']);
+    expect(bellsOf(s, '大泉')).toEqual(['5E', '5C']);
+    expect(s.assignments['5E']).toBe('大泉:高い方'); // stored as typed
   });
 
   it('counts notes hidden by a narrowed range', () => {

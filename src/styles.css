@@ -135,6 +135,7 @@ input[type='number'] { width: 64px; }
   border-right: 2px solid var(--line-measure); padding: 0; cursor: pointer; font-size: 0.9em;
 }
 .player-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.player-memo { margin-left: 4px; color: var(--muted); font-weight: 400; }
 .player-input {
   width: 100%; border: 1px solid transparent; background: transparent; font-weight: 600;
   color: inherit; padding: 1px 4px; border-radius: 4px;

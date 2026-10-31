@@ -3,6 +3,8 @@ import { displayName, fromMidi, isBlackKey, toMidi, type Accidental } from '../m
 import {
   addNote,
   noteAt,
+  playerMemo,
+  playerName,
   removeNote,
   rows,
   setNoteLength,
@@ -110,7 +112,9 @@ export function ScoreGrid(props: ScoreGridProps) {
       style={{ ['--player-w' as string]: `${playerW}px`, ['--note-w' as string]: `${noteW}px` }}
     >
       <div className="grid-row grid-header">
-        <div className="cell-player">担当</div>
+        <div className="cell-player" title="担当者名。「名前:メモ」と書くと、: より後ろはメモになります">
+          担当
+        </div>
         <div className="cell-note">音名</div>
         <div
           className={`lane header-lane${props.onSetStart ? ' clickable' : ''}`}
@@ -132,7 +136,7 @@ export function ScoreGrid(props: ScoreGridProps) {
           key={pitch}
           pitch={pitch}
           player={song.assignments[pitch]}
-          color={playerColor(props.players, song.assignments[pitch])}
+          color={playerColor(props.players, playerName(song.assignments[pitch]))}
           notes={byPitch.get(pitch)}
           active={activePitches?.has(pitch) ?? false}
           count={counts ? counts.get(pitch) ?? 0 : undefined}
@@ -270,18 +274,23 @@ const GridRow = memo(function GridRow(p: RowProps) {
   };
 
   const black = isBlackKey(p.pitch);
+  const name = playerName(p.player);
+  const memo = playerMemo(p.player);
   return (
     <div className={`grid-row${black ? ' black' : ''}${p.active ? ' active' : ''}`}>
       <div className="cell-player" style={{ color: p.color }}>
         {p.readOnly || !p.onAssign ? (
-          <span className="player-name">{p.player ?? ''}</span>
+          <span className="player-name" title={p.player}>
+            {name}
+            {memo && <span className="player-memo">{memo}</span>}
+          </span>
         ) : (
           <PlayerInput pitch={p.pitch} value={p.player ?? ''} onCommit={p.onAssign} />
         )}
       </div>
       <button
         className="cell-note"
-        style={{ borderLeftColor: p.player ? p.color : 'transparent' }}
+        style={{ borderLeftColor: name ? p.color : 'transparent' }}
         onClick={() => p.onPreview?.(p.pitch)}
         title="クリックで音を確認"
         tabIndex={-1}
@@ -327,7 +336,8 @@ function PlayerInput(props: { pitch: NoteName; value: string; onCommit: (pitch: 
     <input
       className="player-input"
       value={draft ?? props.value}
-      placeholder="名前"
+      title={props.value || undefined}
+      placeholder="名前:メモ"
       list="player-names"
       onChange={(e) => setDraft(e.target.value)}
       onBlur={commit}
