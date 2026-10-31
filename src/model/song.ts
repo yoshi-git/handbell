@@ -177,6 +177,15 @@ export function bellsOf(song: Song, player: string): NoteName[] {
   return rows(song).filter((p) => playerName(song.assignments[p]) === player);
 }
 
+/** Bells that stay silent when the given players are muted ('' mutes bells with no player). */
+export function mutedBells(song: Song, mutedPlayers: ReadonlySet<string>): Set<NoteName> {
+  const out = new Set<NoteName>();
+  if (!mutedPlayers.size) return out;
+  const pitches = new Set([...rows(song), ...song.notes.map((n) => n.pitch)]);
+  for (const p of pitches) if (mutedPlayers.has(playerName(song.assignments[p]))) out.add(p);
+  return out;
+}
+
 export interface PlayerStat {
   /** '' for bells that are played but not assigned to anyone. */
   name: string;

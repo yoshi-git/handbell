@@ -29,6 +29,8 @@ export class Player {
   private lastReported = -1;
   /** Octaves added when sounding (handbells ring higher than written). Takes effect from the next strike. */
   octaves = 0;
+  /** Bells skipped during playback (e.g. players switched off). Takes effect from the next strike. */
+  muted: ReadonlySet<NoteName> = new Set();
 
   get playing(): boolean {
     return this.timer !== null;
@@ -138,7 +140,7 @@ export class Player {
       const t = this.timeOf(this.nextStep);
       const dur = this.stepDur();
       for (const n of song.notes) {
-        if (n.step === this.nextStep) {
+        if (n.step === this.nextStep && !this.muted.has(n.pitch)) {
           strikeBell(ctx, this.master!, frequency(n.pitch, this.octaves), t, n.length * dur);
         }
       }

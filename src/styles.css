@@ -127,6 +127,9 @@ input[type='number'] { width: 64px; }
 .player-stats td { text-align: right; font-variant-numeric: tabular-nums; }
 .player-stats td.bells { text-align: left; color: var(--muted); }
 .player-stats tr.unassigned th { font-weight: 400; }
+.player-stats .sound { padding-right: 0; text-align: center; }
+.player-stats .sound input { margin: 0; cursor: pointer; }
+.player-stats tr.off > :not(.sound) { opacity: 0.45; }
 
 /* ---------- score grid ---------- */
 .score-grid { position: relative; display: inline-block; min-width: 100%; --row-h: 26px; }

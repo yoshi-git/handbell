@@ -32,7 +32,7 @@ npm run build:site  # 本番サイト用ビルド（base=/handbell/）
   - `xml.ts`: MusicXML 用の小さな XML パーサ（Node には DOMParser がないため自前）
 - `src/audio/`: Web Audio。`bell.ts` はベル音の合成、`scheduler.ts` は先読み方式の再生スケジューラ（`Player`）
 - `src/components/ScoreGrid.tsx`: 音名グリッド。担当者名・音名・右端の出現回数の列と、編集時のポインタ操作もここにある
-- `src/components/PlayerStats.tsx`: 楽譜の下（印刷にも）に出す担当ごとの集計（担当音種数・延べ担当音数）
+- `src/components/PlayerStats.tsx`: 楽譜の下（印刷にも）に出す担当ごとの集計（担当音種数・延べ担当音数）。編集画面ではチェックを外した担当のベルを再生で鳴らさない（曲データには保存しない）
 - `src/pages/`: `SongList.tsx`（一覧・ファイル読み込み）、`Editor.tsx`（編集・試奏・共有・印刷・書き出し、Undo 履歴）
 - `src/storage/localSongs.ts`: localStorage への保存（キー `bellscore.songs`）
 - `src/util/`: `file.ts`（ダウンロード・ファイル名）、`zip.ts`（`.mxl` 読み込み）、`colors.ts`（担当者ごとの色）

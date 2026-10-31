@@ -12,6 +12,7 @@ import {
   bellsOf,
   playerMemo,
   playerName,
+  mutedBells,
   playerStats,
   players,
   rows,
@@ -102,6 +103,20 @@ describe('song', () => {
       { name: '', bells: ['4C'], strikes: 1 },
     ]);
     expect(playerStats(createSong())).toEqual([]);
+  });
+
+  it('finds the bells to silence for muted players', () => {
+    let s = createSong();
+    s = addNote(s, '4C', 0);
+    s = setAssignment(s, '5E', '大泉:高い方');
+    s = setAssignment(s, '5C', '大泉');
+    s = setAssignment(s, '3A', '黒部');
+    expect([...mutedBells(s, new Set())]).toEqual([]);
+    expect([...mutedBells(s, new Set(['大泉']))]).toEqual(['5E', '5C']);
+    // '' stands for bells nobody is assigned to.
+    const loose = mutedBells(s, new Set(['']));
+    expect(loose.has('4C')).toBe(true);
+    expect(loose.has('5E') || loose.has('3A')).toBe(false);
   });
 
   it('counts notes hidden by a narrowed range', () => {

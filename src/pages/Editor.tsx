@@ -10,6 +10,7 @@ import {
   deleteSelection,
   hiddenNoteCount,
   insertMeasures,
+  mutedBells,
   newId,
   pasteArea,
   pasteClip,
@@ -142,6 +143,12 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   useEffect(() => {
     player.current!.octaves = octaves;
   }, [octaves]);
+  // Players unchecked in the list under the score are left out of playback ('' = unassigned bells).
+  const [mutedPlayers, setMutedPlayers] = useState<Set<string>>(() => new Set());
+  const silent = useMemo(() => mutedBells(song, mutedPlayers), [song, mutedPlayers]);
+  useEffect(() => {
+    player.current!.muted = silent;
+  }, [silent]);
   const [startStep, setStartStep] = useState(0);
   const [activeStep, setActiveStep] = useState<number | null>(null);
   const playheadRef = useRef<HTMLDivElement>(null);
@@ -658,6 +665,14 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
             ドラッグで範囲を選択。貼り付けは選択範囲の先頭の拍に、元と同じ音名で入ります（コピーはクリップボード経由なので、別のタブの譜面にも貼れます）
           </span>
         )}
+        {silent.size > 0 && (
+          <span className="warn">
+            一部の担当は鳴らしていません（楽譜の下の一覧で切り替え）
+            <button className="link" onClick={() => setMutedPlayers(new Set())}>
+              全員鳴らす
+            </button>
+          </span>
+        )}
         {hidden > 0 && <span className="warn">音域外・範囲外の音符 {hidden} 個は非表示です</span>}
       </div>
 
@@ -682,7 +697,13 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
             showCounts
           />
           <div className="player-stats-wrap">
-            <PlayerStats song={song} players={players} accidental={accidental} />
+            <PlayerStats
+              song={song}
+              players={players}
+              accidental={accidental}
+              muted={mutedPlayers}
+              onMutedChange={setMutedPlayers}
+            />
           </div>
         </div>
       </div>
