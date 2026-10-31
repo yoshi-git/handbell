@@ -5,7 +5,12 @@ import type { Song } from '../model/types';
 const modules = import.meta.glob('./*.bellscore.json', { eager: true, import: 'default' });
 
 // Listed first in this order; the rest follow alphabetically by file name.
-const PINNED = ['./famima-short.bellscore.json', './mario-short.bellscore.json', './butterfly-short.bellscore.json'];
+const PINNED = [
+  './rainbow.bellscore.json',
+  './famima-short.bellscore.json',
+  './mario-short.bellscore.json',
+  './butterfly-short.bellscore.json',
+];
 const rank = (path: string) => (PINNED.includes(path) ? PINNED.indexOf(path) : PINNED.length);
 
 export const SAMPLES: Song[] = Object.entries(modules)
