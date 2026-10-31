@@ -37,6 +37,13 @@ interface History {
 }
 
 const HISTORY_LIMIT = 200;
+/** Playback pitch: how many octaves above the written notes the bells sound. Saved per device, not in the song. */
+const OCTAVE_OPTIONS = [
+  { value: 0, label: '譜面どおり' },
+  { value: 1, label: '1オクターブ上' },
+  { value: 2, label: '2オクターブ上' },
+];
+
 const SUBDIVISION_OPTIONS = [
   { value: 1, label: '4分音符' },
   { value: 2, label: '8分音符' },
@@ -124,6 +131,13 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   const [loop, setLoop] = useState(false);
   // Rhythm-game style: the playhead stays put and the score flows past it.
   const [flow, setFlow] = useState(() => loadPref('bellscore.flow', '1') === '1');
+  const [octaves, setOctaves] = useState(() => {
+    const v = Number(loadPref('bellscore.octaves', '0'));
+    return OCTAVE_OPTIONS.some((o) => o.value === v) ? v : 0;
+  });
+  useEffect(() => {
+    player.current!.octaves = octaves;
+  }, [octaves]);
   const [startStep, setStartStep] = useState(0);
   const [activeStep, setActiveStep] = useState<number | null>(null);
   const playheadRef = useRef<HTMLDivElement>(null);
@@ -607,6 +621,22 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
             disabled={playing}
           />
           譜面を流す
+        </label>
+        <label title="鳴らす音の高さ。譜面の音名や書き出すデータは変わりません">
+          音の高さ
+          <select
+            value={octaves}
+            onChange={(e) => {
+              setOctaves(Number(e.target.value));
+              savePref('bellscore.octaves', e.target.value);
+            }}
+          >
+            {OCTAVE_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
         </label>
         <span className="hint">
           {startStep > 0 && (

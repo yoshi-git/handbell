@@ -49,8 +49,9 @@ export function notesInRange(low: NoteName, high: NoteName): NoteName[] {
   return out;
 }
 
-export function frequency(name: NoteName): number {
-  return 440 * Math.pow(2, (toMidi(name) - 69) / 12);
+/** Sounding frequency in Hz; `octaves` raises playback only (the written pitch stays). */
+export function frequency(name: NoteName, octaves = 0): number {
+  return 440 * Math.pow(2, (toMidi(name) - 69) / 12 + octaves);
 }
 
 /** Display label, e.g. "4C#" -> "4C♯" or "4D♭". */

@@ -28,6 +28,8 @@ export function strikeBell(
   out.gain.exponentialRampToValueAtTime(0.001, end);
 
   const lowBoost = Math.min(1.6, Math.max(0.7, 440 / freq));
+  // Ears are most sensitive around 1–4kHz, so soften bells played that high (e.g. 2 octaves up).
+  const treble = freq > 1000 ? Math.sqrt(1000 / freq) : 1;
   for (const p of PARTIALS) {
     const f = freq * p.ratio;
     if (f > 16000) continue;
@@ -35,7 +37,7 @@ export function strikeBell(
     osc.type = 'sine';
     osc.frequency.value = f;
     const g = ctx.createGain();
-    const peak = p.gain * 0.18;
+    const peak = p.gain * 0.18 * treble;
     g.gain.setValueAtTime(0, time);
     g.gain.linearRampToValueAtTime(peak, time + 0.004);
     g.gain.exponentialRampToValueAtTime(0.0001, time + 0.004 + p.decay * lowBoost);

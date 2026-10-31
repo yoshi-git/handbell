@@ -27,6 +27,8 @@ export class Player {
   private startStep = 0;
   private nextStep = 0;
   private lastReported = -1;
+  /** Octaves added when sounding (handbells ring higher than written). Takes effect from the next strike. */
+  octaves = 0;
 
   get playing(): boolean {
     return this.timer !== null;
@@ -104,7 +106,7 @@ export class Player {
       this.master.connect(this.ctx.destination);
     }
     await this.ctx.resume();
-    strikeBell(this.ctx, this.master!, frequency(pitch), this.ctx.currentTime + 0.01, seconds);
+    strikeBell(this.ctx, this.master!, frequency(pitch, this.octaves), this.ctx.currentTime + 0.01, seconds);
   }
 
   private timeOf(step: number): number {
@@ -137,7 +139,7 @@ export class Player {
       const dur = this.stepDur();
       for (const n of song.notes) {
         if (n.step === this.nextStep) {
-          strikeBell(ctx, this.master!, frequency(n.pitch), t, n.length * dur);
+          strikeBell(ctx, this.master!, frequency(n.pitch, this.octaves), t, n.length * dur);
         }
       }
       this.nextStep++;

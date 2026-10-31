@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { displayName, fromMidi, normalize, notesInRange, toMidi } from '../src/model/pitch';
+import { displayName, frequency, fromMidi, normalize, notesInRange, toMidi } from '../src/model/pitch';
 
 describe('pitch', () => {
   it('converts note names to MIDI', () => {
@@ -9,6 +9,14 @@ describe('pitch', () => {
     expect(toMidi('4C#')).toBe(61);
     expect(toMidi('4Db')).toBe(61);
     expect(toMidi('x')).toBeNaN();
+  });
+
+  it('gives sounding frequencies, optionally octaves higher', () => {
+    expect(frequency('4A')).toBe(440);
+    expect(frequency('3A')).toBe(220);
+    expect(frequency('4A', 1)).toBe(880);
+    expect(frequency('3A', 2)).toBe(880);
+    expect(frequency('5E', 2)).toBeCloseTo(2637.02, 1);
   });
 
   it('round-trips MIDI to canonical names', () => {
