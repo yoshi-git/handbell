@@ -695,6 +695,7 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
             selection={selecting ? selection : null}
             onSelect={setSelection}
             showCounts
+            silent={silent}
           />
           <div className="player-stats-wrap">
             <PlayerStats

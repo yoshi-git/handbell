@@ -40,6 +40,8 @@ export interface ScoreGridProps {
   onSelect?: (sel: Selection | null) => void;
   /** Show how many times each bell is struck, at the right edge. */
   showCounts?: boolean;
+  /** Bells left out of playback; their rows are drawn grey. */
+  silent?: ReadonlySet<NoteName>;
 }
 
 /** Widths of the sticky label columns: [player, note name]. Narrower on phones. */
@@ -60,7 +62,7 @@ function useCompact(): boolean {
 export function ScoreGrid(props: ScoreGridProps) {
   const { song, stepWidth, fromStep = 0, toStep = totalSteps(song) } = props;
   // Rows only need stable props; per-step data is passed as `active`.
-  const { activePitches, playheadRef, selection, ...rowProps } = props;
+  const { activePitches, playheadRef, selection, silent, ...rowProps } = props;
   const spm = stepsPerMeasure(song);
   const steps = toStep - fromStep;
   const [playerW, noteW] = LABEL_W[useCompact() ? 'compact' : 'normal'];
@@ -137,7 +139,9 @@ export function ScoreGrid(props: ScoreGridProps) {
           key={pitch}
           pitch={pitch}
           player={song.assignments[pitch]}
-          color={playerColor(props.players, playerName(song.assignments[pitch]))}
+          color={
+            silent?.has(pitch) ? 'var(--unassigned)' : playerColor(props.players, playerName(song.assignments[pitch]))
+          }
           notes={byPitch.get(pitch)}
           active={activePitches?.has(pitch) ?? false}
           count={counts ? counts.get(pitch) ?? 0 : undefined}
@@ -179,7 +183,7 @@ function SelectionBox(p: { song: Song; sel: Selection; fromStep: number; toStep:
   );
 }
 
-interface RowProps extends Omit<ScoreGridProps, 'activePitches' | 'playheadRef' | 'selection'> {
+interface RowProps extends Omit<ScoreGridProps, 'activePitches' | 'playheadRef' | 'selection' | 'silent'> {
   pitch: NoteName;
   player: string | undefined;
   color: string;
