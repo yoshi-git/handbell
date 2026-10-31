@@ -44,6 +44,8 @@ const OCTAVE_OPTIONS = [
   { value: 2, label: '2オクターブ上' },
 ];
 
+const DEFAULT_OCTAVES = 2;
+
 const SUBDIVISION_OPTIONS = [
   { value: 1, label: '4分音符' },
   { value: 2, label: '8分音符' },
@@ -132,8 +134,9 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   // Rhythm-game style: the playhead stays put and the score flows past it.
   const [flow, setFlow] = useState(() => loadPref('bellscore.flow', '1') === '1');
   const [octaves, setOctaves] = useState(() => {
-    const v = Number(loadPref('bellscore.octaves', '0'));
-    return OCTAVE_OPTIONS.some((o) => o.value === v) ? v : 0;
+    // Handbells sound high, so play 2 octaves up unless this device chose otherwise.
+    const v = Number(loadPref('bellscore.octaves', String(DEFAULT_OCTAVES)));
+    return OCTAVE_OPTIONS.some((o) => o.value === v) ? v : DEFAULT_OCTAVES;
   });
   useEffect(() => {
     player.current!.octaves = octaves;
