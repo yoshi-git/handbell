@@ -5,7 +5,7 @@
   "tempo": 142,
   "beatsPerMeasure": 4,
   "subdivisions": 4,
-  "measures": 68,
+  "measures": 67,
   "range": {
     "low": "3A",
     "high": "5E"
@@ -2396,167 +2396,172 @@
     },
     {
       "pitch": "5D",
-      "step": 962,
-      "length": 2
-    },
-    {
-      "pitch": "5C",
       "step": 964,
       "length": 2
     },
     {
-      "pitch": "5D",
+      "pitch": "5C",
       "step": 966,
       "length": 2
     },
     {
-      "pitch": "5C",
+      "pitch": "5D",
       "step": 968,
       "length": 2
     },
     {
-      "pitch": "5E",
+      "pitch": "5C",
       "step": 970,
+      "length": 2
+    },
+    {
+      "pitch": "5E",
+      "step": 972,
       "length": 4
     },
     {
       "pitch": "5C",
-      "step": 974,
-      "length": 18
+      "step": 976,
+      "length": 8
+    },
+    {
+      "pitch": "4G",
+      "step": 976,
+      "length": 8
     },
     {
       "pitch": "4E",
-      "step": 974,
-      "length": 18
+      "step": 976,
+      "length": 8
     },
     {
       "pitch": "4C",
-      "step": 974,
-      "length": 18
+      "step": 976,
+      "length": 8
     },
     {
       "pitch": "3A",
-      "step": 974,
-      "length": 18
+      "step": 976,
+      "length": 8
     },
     {
       "pitch": "5C",
-      "step": 1000,
-      "length": 4
+      "step": 988,
+      "length": 2
     },
     {
       "pitch": "4B",
-      "step": 1004,
-      "length": 4
+      "step": 990,
+      "length": 2
     },
     {
       "pitch": "5C",
-      "step": 1008,
+      "step": 992,
       "length": 16
     },
     {
       "pitch": "3A",
-      "step": 1008,
+      "step": 992,
       "length": 16
     },
     {
       "pitch": "4C",
-      "step": 1012,
+      "step": 996,
       "length": 12
     },
     {
       "pitch": "4F",
-      "step": 1016,
+      "step": 1000,
       "length": 8
     },
     {
       "pitch": "4A",
-      "step": 1020,
+      "step": 1004,
       "length": 4
     },
     {
       "pitch": "4D",
+      "step": 1008,
+      "length": 16
+    },
+    {
+      "pitch": "4G",
+      "step": 1012,
+      "length": 12
+    },
+    {
+      "pitch": "5D",
+      "step": 1016,
+      "length": 8
+    },
+    {
+      "pitch": "4F",
+      "step": 1020,
+      "length": 4
+    },
+    {
+      "pitch": "5C",
       "step": 1024,
       "length": 16
     },
     {
       "pitch": "4G",
-      "step": 1028,
-      "length": 12
-    },
-    {
-      "pitch": "5D",
-      "step": 1032,
-      "length": 8
-    },
-    {
-      "pitch": "4F",
-      "step": 1036,
-      "length": 4
-    },
-    {
-      "pitch": "5C",
-      "step": 1040,
-      "length": 16
-    },
-    {
-      "pitch": "4G",
-      "step": 1040,
+      "step": 1024,
       "length": 16
     },
     {
       "pitch": "4E",
-      "step": 1040,
+      "step": 1024,
       "length": 16
     },
     {
       "pitch": "3A",
-      "step": 1040,
+      "step": 1024,
       "length": 16
     },
     {
       "pitch": "4B",
-      "step": 1056,
+      "step": 1040,
       "length": 16
     },
     {
       "pitch": "4G",
-      "step": 1056,
+      "step": 1040,
       "length": 16
     },
     {
       "pitch": "4D",
-      "step": 1056,
+      "step": 1040,
       "length": 16
     },
     {
       "pitch": "3B",
-      "step": 1056,
+      "step": 1040,
       "length": 16
     },
     {
       "pitch": "4C",
-      "step": 1072,
+      "step": 1056,
       "length": 16
     },
     {
       "pitch": "4E",
-      "step": 1073,
+      "step": 1057,
       "length": 15
     },
     {
       "pitch": "4G",
-      "step": 1074,
+      "step": 1058,
       "length": 14
     },
     {
       "pitch": "5C",
-      "step": 1075,
+      "step": 1059,
       "length": 13
     },
     {
       "pitch": "5E",
-      "step": 1076,
+      "step": 1060,
       "length": 12
     }
   ]
