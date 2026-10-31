@@ -135,6 +135,7 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   const [loop, setLoop] = useState(false);
   // Rhythm-game style: the playhead stays put and the score flows past it.
   const [flow, setFlow] = useState(() => loadPref('bellscore.flow', '1') === '1');
+  const [thinRows, setThinRows] = useState(() => loadPref<string>('bellscore.thinRows', '0') === '1');
   const [octaves, setOctaves] = useState(() => {
     // Handbells sound high, so play 2 octaves up unless this device chose otherwise.
     const v = Number(loadPref('bellscore.octaves', String(DEFAULT_OCTAVES)));
@@ -617,11 +618,11 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
             1小節 ▶
           </button>
         </span>
-        <label>
+        <label className="wide-only">
           <input type="checkbox" checked={loop} onChange={(e) => setLoop(e.target.checked)} disabled={playing} />
           ループ
         </label>
-        <label title="再生位置を固定して、譜面のほうを流します">
+        <label className="wide-only" title="再生位置を固定して、譜面のほうを流します">
           <input
             type="checkbox"
             checked={flow}
@@ -633,7 +634,7 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
           />
           譜面を流す
         </label>
-        <label title="鳴らす音の高さ。譜面の音名や書き出すデータは変わりません">
+        <label className="wide-only" title="鳴らす音の高さ。譜面の音名や書き出すデータは変わりません">
           音の高さ
           <select
             value={octaves}
@@ -648,6 +649,17 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
               </option>
             ))}
           </select>
+        </label>
+        <label title="行の高さを2/3にして、多くのベルを一度に表示します">
+          <input
+            type="checkbox"
+            checked={thinRows}
+            onChange={(e) => {
+              setThinRows(e.target.checked);
+              savePref('bellscore.thinRows', e.target.checked ? '1' : '0');
+            }}
+          />
+          行の高さ2/3
         </label>
         <span className="hint">
           {startStep > 0 && (
@@ -677,7 +689,7 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
       </div>
 
       <div className="workspace">
-        <div className={`grid-scroll${playing && flow ? ' flowing' : ''}`} ref={scrollRef}>
+        <div className={`grid-scroll${playing && flow ? ' flowing' : ''}${thinRows ? ' thin' : ''}`} ref={scrollRef}>
           <ScoreGrid
             song={song}
             players={players}

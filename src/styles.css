@@ -135,6 +135,11 @@ input[type='number'] { width: 64px; }
 .score-grid { position: relative; display: inline-block; min-width: 100%; --row-h: 26px; }
 .grid-row { display: flex; height: var(--row-h); background: var(--row-white); }
 .grid-row.black { background: var(--row-black); }
+/* Optional thin rows (2/3 height) so more bells fit on screen. Not used when printing. */
+.grid-scroll.thin .score-grid { --row-h: calc(26px * 2 / 3); }
+.grid-scroll.thin .grid-row { font-size: 0.85em; }
+.grid-scroll.thin .player-input { padding-top: 0; padding-bottom: 0; }
+.grid-scroll.thin .note-bar { top: 2px; bottom: 2px; }
 .cell-player, .cell-note {
   position: sticky; z-index: 2; flex: none; height: 100%;
   display: flex; align-items: center; border-bottom: 1px solid var(--line-step);
@@ -222,6 +227,9 @@ input[type='number'] { width: 64px; }
   .playbar .hint { display: none; }
 
   .score-grid { --row-h: 30px; }
+  .grid-scroll.thin .score-grid { --row-h: 20px; }
+  /* Phones: loop, flowing score and playback pitch keep their saved values but have no controls. */
+  .playbar .wide-only { display: none; }
   .cell-player { font-size: 0.75em; }
   .cell-count { width: 36px; padding: 0 6px; }
 
