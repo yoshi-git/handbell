@@ -1,16 +1,29 @@
 {
-  "version": 1,
+  "version": 2,
   "id": "mvtl9b9ivgsjiv",
   "title": "mario_short",
   "tempo": 180,
   "beatsPerMeasure": 4,
   "subdivisions": 6,
-  "measures": 10,
+  "measures": 6,
   "range": {
     "low": "3A",
     "high": "5E"
   },
-  "assignments": {},
+  "accidental": "sharp",
+  "assignments": {
+    "3B": "中山",
+    "4D": "小幡",
+    "4E": "小山",
+    "4F": "としろ",
+    "4G": "としろ",
+    "4A": "中山",
+    "5D": "小山:桜井",
+    "5E": "小幡:大泉",
+    "5C": "中山:桜井",
+    "4B": "小山:桜井",
+    "4F#": "小幡"
+  },
   "notes": [
     {
       "pitch": "4B",
@@ -130,91 +143,6 @@
     {
       "pitch": "4F#",
       "step": 135,
-      "length": 6
-    },
-    {
-      "pitch": "4G",
-      "step": 144,
-      "length": 6
-    },
-    {
-      "pitch": "4D",
-      "step": 153,
-      "length": 6
-    },
-    {
-      "pitch": "3B",
-      "step": 162,
-      "length": 6
-    },
-    {
-      "pitch": "4E",
-      "step": 171,
-      "length": 6
-    },
-    {
-      "pitch": "4F#",
-      "step": 177,
-      "length": 6
-    },
-    {
-      "pitch": "4F",
-      "step": 183,
-      "length": 3
-    },
-    {
-      "pitch": "4E",
-      "step": 186,
-      "length": 6
-    },
-    {
-      "pitch": "4D",
-      "step": 192,
-      "length": 4
-    },
-    {
-      "pitch": "4B",
-      "step": 196,
-      "length": 4
-    },
-    {
-      "pitch": "5D",
-      "step": 200,
-      "length": 4
-    },
-    {
-      "pitch": "5E",
-      "step": 204,
-      "length": 6
-    },
-    {
-      "pitch": "5C",
-      "step": 210,
-      "length": 3
-    },
-    {
-      "pitch": "5D",
-      "step": 213,
-      "length": 3
-    },
-    {
-      "pitch": "4B",
-      "step": 219,
-      "length": 6
-    },
-    {
-      "pitch": "4G",
-      "step": 225,
-      "length": 3
-    },
-    {
-      "pitch": "4A",
-      "step": 228,
-      "length": 3
-    },
-    {
-      "pitch": "4F#",
-      "step": 231,
       "length": 6
     }
   ]
