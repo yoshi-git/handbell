@@ -23,7 +23,7 @@ import {
   type Selection,
 } from '../model/song';
 import { songToMusicXml } from '../model/musicxml';
-import { encodeForUrl, songToJson } from '../model/serialize';
+import { clipToText, encodeForUrl, parseClip, songToJson } from '../model/serialize';
 import type { NoteName, Song } from '../model/types';
 import { saveSong } from '../storage/localSongs';
 import { downloadText, safeFilename } from '../util/file';
@@ -46,7 +46,7 @@ const SUBDIVISION_OPTIONS = [
   { value: 12, label: '16分＋3連符' },
 ];
 
-/** Shared across editors so an area can be copied from one song into another. */
+/** Last copied area, shared across editors in this tab. Fallback when the system clipboard can't be read. */
 let clipboard: Clip | null = null;
 
 function loadPref<T extends string>(key: string, fallback: T): T {
@@ -76,7 +76,6 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   const [menuOpen, setMenuOpen] = useState(false);
   const [tool, setTool] = useState<'note' | 'select'>('note');
   const [selection, setSelection] = useState<Selection | null>(null);
-  const [clip, setClip] = useState<Clip | null>(clipboard);
   /** Measures to delete, 1-based and inclusive as shown on screen. */
   const [delRange, setDelRange] = useState({ from: 1, to: 1 });
   const delValid =
@@ -201,11 +200,25 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
 
   // ---- area editing ----
   const selecting = !readOnly && mode === 'edit' && tool === 'select';
+  /** Short status line for clipboard actions (nothing else shows that a copy happened). */
+  const [clipMsg, setClipMsg] = useState<string | null>(null);
+  const msgTimer = useRef<number>();
+  const flash = useCallback((msg: string) => {
+    setClipMsg(msg);
+    window.clearTimeout(msgTimer.current);
+    msgTimer.current = window.setTimeout(() => setClipMsg(null), 3000);
+  }, []);
+  useEffect(() => () => window.clearTimeout(msgTimer.current), []);
+
   const copy = useCallback(() => {
     if (!selection) return;
-    clipboard = copySelection(song, selection);
-    setClip(clipboard);
-  }, [song, selection]);
+    const c = copySelection(song, selection);
+    clipboard = c;
+    // Also put it on the system clipboard so it can be pasted in another tab or window.
+    const failed = () => flash('クリップボードに書き込めませんでした（このタブの中では貼り付けられます）');
+    if (!navigator.clipboard) return failed();
+    navigator.clipboard.writeText(clipToText(c)).then(() => flash(`${c.notes.length}個の音符をコピーしました`), failed);
+  }, [song, selection, flash]);
   const removeSelected = useCallback(() => {
     if (selection) change(deleteSelection(song, selection));
   }, [song, selection, change]);
@@ -213,11 +226,47 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
     copy();
     removeSelected();
   }, [copy, removeSelected]);
-  const paste = useCallback(() => {
-    if (!selection || !clip) return;
-    change(pasteClip(song, clip, selection.from));
-    setSelection(pasteArea(song, clip, selection.from));
-  }, [song, selection, clip, change]);
+  /** Pastes clipboard text if it holds a copied area, otherwise the area last copied in this tab. */
+  const pasteText = useCallback(
+    (text: string | null) => {
+      if (!selection) return;
+      let c: Clip | null = null;
+      try {
+        if (text) c = parseClip(text);
+      } catch {
+        // Something else is on the clipboard.
+      }
+      c ??= clipboard;
+      if (!c) return flash('貼り付ける範囲がありません。範囲選択してコピーしてください');
+      change(pasteClip(song, c, selection.from));
+      setSelection(pasteArea(song, c, selection.from));
+    },
+    [song, selection, change, flash],
+  );
+  /** Button / fallback path: reading may ask the user for permission. */
+  const paste = useCallback(async () => {
+    let text: string | null = null;
+    try {
+      text = (await navigator.clipboard?.readText()) ?? null;
+    } catch {
+      // Permission denied or not supported: fall back to this tab's copy.
+    }
+    pasteText(text);
+  }, [pasteText]);
+  // Ctrl+V: read the paste event (no permission prompt). If the browser doesn't fire one
+  // outside text fields, fall back to the clipboard API shortly after the key press.
+  const pendingPaste = useRef<number>();
+  useEffect(() => {
+    const onPaste = (e: ClipboardEvent) => {
+      if (!selecting || (e.target as HTMLElement | null)?.closest?.('input, select, textarea')) return;
+      window.clearTimeout(pendingPaste.current);
+      pendingPaste.current = undefined;
+      e.preventDefault();
+      pasteText(e.clipboardData?.getData('text/plain') ?? null);
+    };
+    window.addEventListener('paste', onPaste);
+    return () => window.removeEventListener('paste', onPaste);
+  }, [selecting, pasteText]);
 
   // ---- keyboard shortcuts ----
   useEffect(() => {
@@ -235,9 +284,16 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
       } else if (!readOnly && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') {
         e.preventDefault();
         redo();
-      } else if (selecting && (e.ctrlKey || e.metaKey) && ['c', 'x', 'v'].includes(e.key.toLowerCase())) {
+      } else if (selecting && (e.ctrlKey || e.metaKey) && ['c', 'x'].includes(e.key.toLowerCase())) {
         e.preventDefault();
-        ({ c: copy, x: cut, v: paste })[e.key.toLowerCase() as 'c' | 'x' | 'v']();
+        (e.key.toLowerCase() === 'c' ? copy : cut)();
+      } else if (selecting && (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'v') {
+        // No preventDefault: the browser then fires the paste event handled above.
+        window.clearTimeout(pendingPaste.current);
+        pendingPaste.current = window.setTimeout(() => {
+          pendingPaste.current = undefined;
+          void paste();
+        }, 100);
       } else if (selecting && (e.key === 'Delete' || e.key === 'Backspace')) {
         e.preventDefault();
         removeSelected();
@@ -466,18 +522,19 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
             </span>
             {tool === 'select' && (
               <span className="undo">
-                <button onClick={copy} disabled={!selection} title="コピー (Ctrl+C)">
+                <button onClick={copy} disabled={!selection} title="クリップボードにコピー (Ctrl+C)。別のタブや別の譜面にも貼り付けられます">
                   コピー
                 </button>
                 <button onClick={cut} disabled={!selection} title="切り取り (Ctrl+X)">
                   切り取り
                 </button>
-                <button onClick={paste} disabled={!selection || !clip} title="選択範囲の先頭に貼り付け (Ctrl+V)">
+                <button onClick={() => void paste()} disabled={!selection} title="クリップボードの範囲を選択範囲の先頭に貼り付け (Ctrl+V)">
                   貼り付け
                 </button>
                 <button onClick={removeSelected} disabled={!selection} title="削除 (Delete)">
                   削除
                 </button>
+                {clipMsg && <span className="hint">{clipMsg}</span>}
               </span>
             )}
             <span className="undo">
@@ -564,7 +621,7 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
         )}
         {selecting && (
           <span className="hint">
-            ドラッグで範囲を選択。貼り付けは選択範囲の先頭の拍に、元と同じ音名で入ります
+            ドラッグで範囲を選択。貼り付けは選択範囲の先頭の拍に、元と同じ音名で入ります（コピーはクリップボード経由なので、別のタブの譜面にも貼れます）
           </span>
         )}
         {hidden > 0 && <span className="warn">音域外・範囲外の音符 {hidden} 個は非表示です</span>}

@@ -1,5 +1,6 @@
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
-import { isValidNote, normalize } from './pitch';
+import { isValidNote, normalize, toMidi } from './pitch';
+import type { Clip } from './song';
 import type { Song } from './types';
 
 function fail(msg: string): never {
@@ -73,4 +74,61 @@ export function decodeFromUrl(encoded: string): Song {
   const text = decompressFromEncodedURIComponent(encoded);
   if (!text) fail('共有URLが壊れています');
   return songFromJson(text);
+}
+
+// ---- copied areas on the system clipboard ----
+
+const CLIP_TYPE = 'bellscore-clip';
+
+/** Text put on the system clipboard so an area can be pasted into another tab or score. */
+export function clipToText(clip: Clip): string {
+  return JSON.stringify({
+    type: CLIP_TYPE,
+    version: 1,
+    low: clip.low,
+    high: clip.high,
+    width: clip.width,
+    subdivisions: clip.subdivisions,
+    notes: clip.notes.map(({ pitch, step, length }) => ({ pitch, step, length })),
+  });
+}
+
+function clipFail(msg: string): never {
+  throw new Error(`クリップボードの内容を貼り付けられません: ${msg}`);
+}
+
+function intAtLeast(v: unknown, min: number): number | null {
+  return typeof v === 'number' && Number.isInteger(v) && v >= min ? v : null;
+}
+
+/** Validates clipboard text (which may be anything) and returns a clean Clip. */
+export function parseClip(text: string): Clip {
+  let data: unknown;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    clipFail('譜面の範囲ではありません');
+  }
+  if (!data || typeof data !== 'object') clipFail('譜面の範囲ではありません');
+  const d = data as Record<string, unknown>;
+  if (d.type !== CLIP_TYPE) clipFail('譜面の範囲ではありません');
+  if (d.version !== 1) clipFail('未対応のバージョンです');
+  if (!isValidNote(String(d.low)) || !isValidNote(String(d.high))) clipFail('音域が不正です');
+  const low = normalize(String(d.low));
+  const high = normalize(String(d.high));
+  if (toMidi(low) > toMidi(high)) clipFail('音域が不正です');
+  const width = intAtLeast(d.width, 1) ?? clipFail('長さが不正です');
+  const subdivisions = intAtLeast(d.subdivisions, 1) ?? clipFail('長さが不正です');
+  if (!Array.isArray(d.notes)) clipFail('音符がありません');
+  const notes = d.notes.map((n: unknown) => {
+    const note = (n && typeof n === 'object' ? n : {}) as Record<string, unknown>;
+    if (!isValidNote(String(note.pitch))) clipFail('音名が不正です');
+    const pitch = normalize(String(note.pitch));
+    if (toMidi(pitch) < toMidi(low) || toMidi(pitch) > toMidi(high)) clipFail('音符が範囲の外にあります');
+    const step = intAtLeast(note.step, 0);
+    const length = intAtLeast(note.length, 1);
+    if (step === null || step >= width || length === null) clipFail('音符の位置が不正です');
+    return { pitch, step, length };
+  });
+  return { low, high, width, subdivisions, notes };
 }

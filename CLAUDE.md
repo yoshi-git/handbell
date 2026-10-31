@@ -27,7 +27,7 @@ npm run build:site  # 本番サイト用ビルド（base=/handbell/）
   - `types.ts`: `Song` 型（現在 `version: 2`）
   - `pitch.ts`: 音名⇔MIDI 変換、表示名（`displayName`）
   - `song.ts`: 音符の追加・削除・長さ変更、移調、小節の挿入・削除など
-  - `serialize.ts`: JSON・共有URL（lz-string）の変換、入力検証（`parseSong`）、旧バージョンからの移行
+  - `serialize.ts`: JSON・共有URL（lz-string）の変換、入力検証（`parseSong`）、旧バージョンからの移行。範囲コピーをクリップボードに載せるテキスト形式（`clipToText`／`parseClip`）もここ
   - `musicxml.ts`: MusicXML の書き出し・読み込み。範囲と担当者は `<miscellaneous>` に入れて往復できるようにしている
   - `xml.ts`: MusicXML 用の小さな XML パーサ（Node には DOMParser がないため自前）
 - `src/audio/`: Web Audio。`bell.ts` はベル音の合成、`scheduler.ts` は先読み方式の再生スケジューラ（`Player`）
