@@ -14,6 +14,7 @@ import {
   setAssignment,
   setNoteLength,
   setSubdivisions,
+  shiftMeasure,
   strikeCounts,
   transpose,
 } from '../src/model/song';
@@ -112,6 +113,17 @@ describe('song', () => {
       ['4C', 0, 8],
       ['4F', 8, 1],
     ]);
+  });
+
+  it('moves to neighbouring measure starts, clamped to the song', () => {
+    const s = createSong(); // 8 measures of 8 steps
+    expect(shiftMeasure(s, 0, 1)).toBe(8);
+    expect(shiftMeasure(s, 8, -1)).toBe(0);
+    expect(shiftMeasure(s, 12, 1)).toBe(16);
+    expect(shiftMeasure(s, 12, -1)).toBe(8); // mid-measure: back to its own start first
+    expect(shiftMeasure(s, 0, -1)).toBe(0);
+    expect(shiftMeasure(s, 56, 1)).toBe(56); // last measure
+    expect(shiftMeasure(s, 200, -1)).toBe(56); // beyond the end (e.g. after deleting measures)
   });
 
   it('keeps at least one measure when deleting', () => {

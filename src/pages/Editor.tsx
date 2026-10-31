@@ -15,6 +15,7 @@ import {
   players as listPlayers,
   setAssignment,
   setSubdivisions,
+  shiftMeasure,
   stepsPerMeasure,
   totalSteps,
   transpose,
@@ -140,9 +141,9 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
     hidePlayhead();
   }, []);
 
-  const play = useCallback(() => {
+  const play = useCallback((at = startStep) => {
     const total = totalSteps(song);
-    const from = startStep < total ? startStep : 0;
+    const from = at < total ? at : 0;
     setPlaying(true);
     void player.current!.start(song, {
       fromStep: from,
@@ -171,6 +172,17 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
       },
     });
   }, [song, startStep, loop, flow, stepWidth]);
+
+  /** Step the start marker one measure back/forward and bring that measure to the left edge. */
+  const moveMeasure = useCallback(
+    (delta: number) => {
+      const next = shiftMeasure(song, startStep, delta);
+      setStartStep(next);
+      if (playing) play(next);
+      else scrollRef.current?.scrollTo({ left: Math.max(0, next * stepWidth - 8), behavior: 'smooth' });
+    },
+    [song, startStep, playing, play, stepWidth],
+  );
 
   useEffect(() => {
     player.current!.update(song);
@@ -505,9 +517,24 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
       </div>
 
       <div className="playbar no-print">
-        <button className="primary play" onClick={playing ? stop : play}>
+        <button className="primary play" onClick={playing ? stop : () => play()}>
           {playing ? '■ 停止' : '▶ 再生'}
         </button>
+        <span className="measure-nav">
+          <button onClick={() => moveMeasure(-1)} disabled={startStep === 0} title="再生開始位置（▼）を1小節前へ">
+            ◀ 1小節
+          </button>
+          <span className="num" title="再生開始位置（▼）の小節">
+            {Math.min(Math.floor(startStep / spm), song.measures - 1) + 1} / {song.measures}
+          </span>
+          <button
+            onClick={() => moveMeasure(1)}
+            disabled={Math.floor(startStep / spm) >= song.measures - 1}
+            title="再生開始位置（▼）を1小節後ろへ"
+          >
+            1小節 ▶
+          </button>
+        </span>
         <label>
           <input type="checkbox" checked={loop} onChange={(e) => setLoop(e.target.checked)} disabled={playing} />
           ループ
@@ -525,13 +552,12 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
           譜面を流す
         </label>
         <span className="hint">
-          開始位置: {Math.floor(startStep / spm) + 1}小節目
           {startStep > 0 && (
             <button className="link" onClick={() => setStartStep(0)}>
               先頭へ
             </button>
           )}
-          （小節番号の行をクリックで変更 / スペースキーで再生・停止）
+          （小節番号の行をクリックでも開始位置を変更 / スペースキーで再生・停止）
         </span>
         {editing && tool === 'note' && (
           <span className="hint">マスをクリックで音符、ドラッグで響かせる長さ、音符クリックで削除</span>

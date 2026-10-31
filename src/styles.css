@@ -111,6 +111,8 @@ input[type='number'] { width: 64px; }
 .undo { display: inline-flex; gap: 4px; }
 .banner { background: var(--active); justify-content: space-between; }
 .playbar .play { min-width: 96px; }
+.measure-nav { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.measure-nav .num { min-width: 7ch; text-align: center; font-size: 0.9em; font-variant-numeric: tabular-nums; }
 
 .workspace { flex: 1; display: flex; min-height: 0; }
 .grid-scroll { flex: 1; overflow: auto; min-width: 0; padding-bottom: 24px; }

@@ -31,6 +31,17 @@ export function totalSteps(song: Song): number {
   return song.measures * stepsPerMeasure(song);
 }
 
+/**
+ * First step of the measure `delta` measures away from `step`, clamped to the song.
+ * Going back from the middle of a measure lands on that measure's start first.
+ */
+export function shiftMeasure(song: Song, step: number, delta: number): number {
+  const spm = stepsPerMeasure(song);
+  const current = Math.floor(step / spm);
+  const target = delta < 0 && step % spm !== 0 ? current + delta + 1 : current + delta;
+  return Math.max(0, Math.min(song.measures - 1, target)) * spm;
+}
+
 /** Row order for the score: high -> low. */
 export function rows(song: Song): NoteName[] {
   return notesInRange(song.range.low, song.range.high);
