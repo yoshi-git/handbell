@@ -113,6 +113,9 @@ input[type='number'] { width: 64px; }
 .playbar .play { min-width: 96px; }
 .measure-nav { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
 .measure-nav .num { min-width: 7ch; text-align: center; font-size: 0.9em; font-variant-numeric: tabular-nums; }
+.tempo-nav { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-size: 0.9em; }
+.tempo-nav .num { min-width: 6ch; text-align: center; font-variant-numeric: tabular-nums; }
+.narrow-only { display: none; }
 
 .workspace { flex: 1; display: flex; min-height: 0; }
 .grid-scroll { flex: 1; overflow: auto; min-width: 0; padding-bottom: 24px; }
@@ -230,6 +233,7 @@ input[type='number'] { width: 64px; }
   .grid-scroll.thin .score-grid { --row-h: 20px; }
   /* Phones: loop, flowing score and playback pitch keep their saved values but have no controls. */
   .playbar .wide-only { display: none; }
+  .playbar .narrow-only { display: inline-flex; }
   .cell-player { font-size: 0.75em; }
   .cell-count { width: 36px; padding: 0 6px; }
 

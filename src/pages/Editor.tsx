@@ -48,6 +48,11 @@ const OCTAVE_OPTIONS = [
 
 const DEFAULT_OCTAVES = 2;
 
+const MIN_TEMPO = 20;
+const MAX_TEMPO = 300;
+/** How much one tap of the phone tempo arrows changes the tempo. */
+const TEMPO_STEP = 5;
+
 const SUBDIVISION_OPTIONS = [
   { value: 1, label: '4分音符' },
   { value: 2, label: '8分音符' },
@@ -421,13 +426,13 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
           テンポ ♩=
           <input
             type="number"
-            min={20}
-            max={300}
+            min={MIN_TEMPO}
+            max={MAX_TEMPO}
             value={song.tempo}
             onFocus={checkpoint}
             onChange={(e) => {
               const v = Number(e.target.value);
-              if (v >= 20 && v <= 300) change({ ...song, tempo: v }, true);
+              if (v >= MIN_TEMPO && v <= MAX_TEMPO) change({ ...song, tempo: v }, true);
             }}
           />
         </label>
@@ -616,6 +621,25 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
             title="再生開始位置（▼）を1小節後ろへ"
           >
             1小節 ▶
+          </button>
+        </span>
+        {/* Phones: the toolbar's tempo box is folded away, so step the tempo with arrow buttons here. */}
+        <span className="tempo-nav narrow-only">
+          テンポ
+          <button
+            aria-label={`テンポを${TEMPO_STEP}下げる`}
+            disabled={song.tempo <= MIN_TEMPO}
+            onClick={() => change({ ...song, tempo: Math.max(MIN_TEMPO, song.tempo - TEMPO_STEP) })}
+          >
+            ◀
+          </button>
+          <span className="num">♩={song.tempo}</span>
+          <button
+            aria-label={`テンポを${TEMPO_STEP}上げる`}
+            disabled={song.tempo >= MAX_TEMPO}
+            onClick={() => change({ ...song, tempo: Math.min(MAX_TEMPO, song.tempo + TEMPO_STEP) })}
+          >
+            ▶
           </button>
         </span>
         <label className="wide-only">
