@@ -17,6 +17,7 @@ npm run dev         # 開発サーバ (http://localhost:5173/)
 npm run test        # Vitest
 npm run build       # 型チェック + dist/ へビルド（相対パス）
 npm run build:site  # 本番サイト用ビルド（base=/handbell/）
+npm run build:wed   # 結婚式ページ用ビルド（base=/handbell_wed/、dist-wed/ へ）。開発中は npm run dev の /wed/ で開ける
 ```
 作業を終える前に `npm run test` と `npm run build` を実行する。UI に関わる変更はブラウザで実際に操作して確認する（配置・長さ変更・削除・試奏・JSON／MusicXML の入出力・共有URL）。
 
@@ -39,6 +40,7 @@ npm run build:site  # 本番サイト用ビルド（base=/handbell/）
 - `src/playerColors.json`: 担当者名→色のマスタ。メンバーや色を変えるときはここを直す。値は `{ "dark", "light" }`（ダークモード用／ライトモードと印刷用）か、両方共通の `#rrggbb`。`light-dark()` で切り替えるので、`.score-grid`・`.player-stats` に `color-scheme` を指定している
 - `src/samples/`: `*.bellscore.json` を置くと `import.meta.glob` で自動的にサンプル曲として同梱される
 - `tests/`: Vitest の単体テスト
+- 結婚式ページ（`/handbell_wed/`）: アラジンの譜面と再生ボタンだけの PC 専用ページ。エントリーは `wed/index.html`、設定は `vite.wed.config.ts`、コードは `src/wed/`（スタイルも `src/wed/wed.css` に分けていて `styles.css` は読まない）。担当名・回数・集計と未利用の行は出さず、音符の色は担当者色のまま。フォントは Google Fonts から読み込む
 
 ## ドメインの約束事
 - 音名は「オクターブ番号＋音名」。保存形式は常に♯表記（例: `3A`、`4C#`）。`4A` = 440Hz = MIDI 69
@@ -56,7 +58,7 @@ npm run build:site  # 本番サイト用ビルド（base=/handbell/）
 - コンポーネントは `PascalCase.tsx`、それ以外は `camelCase.ts`
 - ロジックは `src/model/` の純粋関数に置き、コンポーネントからはそれを呼ぶ。`Song` はイミュータブルに扱い、変更するときは新しいオブジェクトを返す
 - UI の文言は日本語
-- スタイルは `src/styles.css` にまとめ、色は `:root` の CSS 変数を使う（ダークモードと印刷用の上書きもここにある）
+- スタイルは `src/styles.css` にまとめ（結婚式ページだけは `src/wed/wed.css`）、色は `:root` の CSS 変数を使う（ダークモードと印刷用の上書きもここにある）
 
 ## テスト方針
 `src/model/` を変えたら `tests/` の Vitest テストを追加・更新する。次の点はテストで守り続ける。
@@ -75,6 +77,8 @@ npm run build:site  # 本番サイト用ビルド（base=/handbell/）
 2. `~/static_web/site/handbell/` の中身を `dist/` の中身で置き換える
 3. `~/static_web` で `npm test` を実行する
 4. commit し、**ユーザーの了承を得てから** `main` に push する。GitHub Actions で約1分半後に反映される
+
+結婚式ページも同じ流れで、1 を `npm run build:wed`、2 を `~/static_web/site/handbell_wed/` を `dist-wed/` の中身で置き換え、に読み替える。
 
 push 後に反映を待ってポーリング（curl の繰り返しなど）はしない。push できたことを報告して終わり、本番での確認はユーザーに任せる。
 
