@@ -120,7 +120,7 @@ input[type='number'] { width: 64px; }
 .workspace { flex: 1; display: flex; min-height: 0; }
 .grid-scroll { flex: 1; overflow: auto; min-width: 0; padding-bottom: 24px; }
 /* Room after the last measure so the end of the song can also reach the fixed playhead. */
-.grid-scroll.flowing .score-grid { margin-right: 70%; }
+.grid-scroll.flowing .score-grid { margin-right: 100%; }
 
 /* Per-player totals under the score; stays at the left edge while the score scrolls sideways. */
 .player-stats-wrap { position: sticky; left: 0; padding: 12px 16px 0; }

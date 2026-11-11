@@ -189,8 +189,10 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
         const x = el.offsetLeft + pos * stepWidth;
         const labels = el.offsetLeft;
         if (flow) {
-          // Hold the playhead at 30% of the visible lanes and scroll the score under it.
-          box.scrollLeft = Math.max(0, x - labels - (box.clientWidth - labels) * 0.3);
+          // Hold the playhead a quarter measure into the visible lanes (never past 30% of them,
+          // e.g. when zoomed in on a phone) and scroll the score under it.
+          const hold = Math.min((stepsPerMeasure(song) * stepWidth) / 4, (box.clientWidth - labels) * 0.3);
+          box.scrollLeft = Math.max(0, x - labels - hold);
         } else if (x > box.scrollLeft + box.clientWidth - 80 || x < box.scrollLeft + labels) {
           box.scrollLeft = Math.max(0, x - labels - 40);
         }
