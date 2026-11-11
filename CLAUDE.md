@@ -36,6 +36,7 @@ npm run build:site  # 本番サイト用ビルド（base=/handbell/）
 - `src/pages/`: `SongList.tsx`（一覧・ファイル読み込み）、`Editor.tsx`（編集・試奏・共有・印刷・書き出し、Undo 履歴）
 - `src/storage/localSongs.ts`: localStorage への保存（キー `bellscore.songs`）
 - `src/util/`: `file.ts`（ダウンロード・ファイル名）、`zip.ts`（`.mxl` 読み込み）、`colors.ts`（担当者ごとの色）
+- `src/playerColors.json`: 担当者名→色のマスタ。メンバーや色を変えるときはここを直す
 - `src/samples/`: `*.bellscore.json` を置くと `import.meta.glob` で自動的にサンプル曲として同梱される
 - `tests/`: Vitest の単体テスト
 
@@ -44,9 +45,10 @@ npm run build:site  # 本番サイト用ビルド（base=/handbell/）
 - ♯／♭のどちらで表示するかは曲ごとの設定（`Song.accidental`）。♭は表示と書き出しのときだけ使う
 - 既定の音域は 3A〜5E（半音を含む20本）
 - 譜面は縦が音名（高音が上）、横が拍。担当者名は各音名の左に表示し、`Song.assignments`（音名→担当者名）で持つ。値は「名前:メモ」とも書け、最初の `:`（全角 `：` も可）より左を担当者名として扱う（色分け・人数もこれで数える）。保存は入力どおり
+- 担当者の色は名前で決まる。マスタにある名前はその色、ない名前はマスタで使っていない色から名前に応じて自動で付く（曲内でかぶったときだけずらす）。曲データには色を入れない
 - 再生の高さ（「音の高さ」で何オクターブ上で鳴らすか）は端末ごとの設定（localStorage、既定は2オクターブ上）で、`Song` には入れない。譜面・書き出しは常に記譜どおり
 - 時間の単位は step（1拍 = `subdivisions` step）。音符は `{ pitch, step, length }` で、`length` はベルを響かせる長さ
-- ユーザーが作った曲をサンプルとして同梱するときは、受け取った JSON を手を加えずに `src/samples/` に置く
+- ユーザーが作った曲をサンプルとして同梱するときは、受け取った JSON を手を加えずに `src/samples/` に置く。既存のサンプルを差し替えるときは `id` だけ元のものを残す（`#/sample/<id>` のリンクを保つため）
 - 曲を公開するギャラリー機能は現時点では対象外
 
 ## コーディング規約

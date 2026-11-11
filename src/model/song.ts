@@ -163,7 +163,7 @@ export function playerMemo(assignment: string | undefined): string {
   return i < 0 ? '' : text.slice(i + 1).trim();
 }
 
-/** Distinct player names in row order (high -> low), for stable colors and listing. */
+/** Distinct player names in row order (high -> low), for listing. */
 export function players(song: Song): string[] {
   const out: string[] = [];
   for (const pitch of rows(song)) {
