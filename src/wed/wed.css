@@ -78,37 +78,40 @@ body {
   box-shadow: 0 12px 40px rgb(184 101 122 / 0.14);
 }
 .wed-scroll {
+  position: relative;
+  z-index: 1;
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 8px;
   border-radius: 12px;
   scrollbar-width: thin;
   scrollbar-color: var(--rose) transparent;
+  /* Fades back in over the image when returning to the score. */
+  transition: opacity 0.8s ease;
 }
-/* Played to the end: the score blurs away and the hidden image fades in over it. */
-.wed-scroll { transition: opacity 1s ease, filter 1s ease; }
-.wed-card.revealed .wed-scroll { opacity: 0; filter: blur(6px); pointer-events: none; }
+/* Played to the end: the score has flowed away; let clicks reach the image and hide the scrollbar thumb. */
+.wed-card.revealed .wed-scroll { pointer-events: none; scrollbar-color: transparent transparent; }
+/* The image lies behind the score (same area as the grid; height set from JS) and shows wherever the score has left. */
 .wed-reveal {
   position: absolute;
-  inset: 22px;
+  top: 22px;
+  left: 22px;
+  right: 22px;
+  z-index: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  padding: 24px;
   border: none;
+  border-radius: 12px;
+  overflow: hidden;
   background: none;
-  cursor: pointer;
-  opacity: 0;
   visibility: hidden;
-  transform: scale(0.96);
-  transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s linear 0.5s;
+  /* Stay visible while the score fades back in over it. */
+  transition: visibility 0s linear 0.8s;
 }
-.wed-card.revealed .wed-reveal {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  transition: opacity 1.8s ease 0.5s, transform 1.8s ease 0.5s, visibility 0s;
-}
+.wed-card.backdrop .wed-reveal { visibility: visible; transition: none; }
+.wed-card.revealed .wed-reveal { cursor: pointer; }
 .wed-reveal img {
   max-width: 100%;
   max-height: 100%;
@@ -166,7 +169,8 @@ body {
     repeating-linear-gradient(to right, var(--line-beat) 0 1px, transparent 1px calc(var(--sw) * var(--spb)));
 }
 
-.wed-head { height: 24px; background: transparent; }
+/* Opaque so the image behind the score does not show through the measure numbers. */
+.wed-head { height: 24px; background: var(--row-white); }
 .wed-head .wed-label { color: var(--gold); font-weight: 500; background: var(--row-white); border-bottom-color: var(--gold-light); }
 .wed-head-lane { border-bottom-color: var(--gold-light); background-image: none; }
 .wed-measure { position: absolute; top: 3px; padding-left: 5px; font-size: 12px; color: var(--muted); }

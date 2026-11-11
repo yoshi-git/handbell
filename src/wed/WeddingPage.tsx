@@ -5,7 +5,7 @@ import { stepsPerMeasure } from '../model/song';
 import type { NoteName, Song } from '../model/types';
 import aladdin from '../samples/aladdin.bellscore.json';
 import { WeddingScore } from './WeddingScore';
-// Shown in place of the score once the song has been played to the end. Swap the file to change it.
+// Laid behind the score and uncovered as it flows away at the end of the song. Swap the file to change it.
 import revealImage from './reveal.svg';
 
 /** Width of one step in px (a 4/4 measure of 6 steps per beat is 240px). */
@@ -54,26 +54,86 @@ function Wedding({ song }: { song: Song }) {
   }
   const [playing, setPlaying] = useState(false);
   const [activeStep, setActiveStep] = useState<number | null>(null);
-  /** The song was played to the end: the score fades out and the image fades in. */
+  /** The song was played to the end: the score flows away, uncovering the image laid behind it. */
   const [revealed, setRevealed] = useState(false);
+  /** Height of the score grid: the image layer matches it so it never peeks out below the score. */
+  const [gridHeight, setGridHeight] = useState<number>();
   const playheadRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const leaveRaf = useRef<number>();
 
-  /** After stopping or reaching the end: hide the playhead and glide back to the start. */
-  const finish = useCallback(() => {
-    setPlaying(false);
-    setActiveStep(null);
-    if (playheadRef.current) playheadRef.current.style.display = 'none';
-    scrollRef.current?.scrollTo({ left: 0, behavior: 'smooth' });
+  useEffect(() => {
+    const grid = scrollRef.current?.firstElementChild as HTMLElement | null | undefined;
+    if (!grid) return;
+    const observer = new ResizeObserver(() => setGridHeight(grid.offsetHeight));
+    observer.observe(grid);
+    return () => observer.disconnect();
   }, []);
 
+  const hidePlayhead = useCallback(() => {
+    if (playheadRef.current) playheadRef.current.style.display = 'none';
+  }, []);
+
+  const cancelLeave = useCallback(() => {
+    if (leaveRaf.current !== undefined) cancelAnimationFrame(leaveRaf.current);
+    leaveRaf.current = undefined;
+  }, []);
+
+  /** Playback is over (stopped or finished): clear the bell highlights. */
+  const settle = useCallback(() => {
+    setPlaying(false);
+    setActiveStep(null);
+  }, []);
+
+  /** After the last note: keep the score flowing at the playback speed until it has left the card. */
+  const leave = useCallback(() => {
+    const box = scrollRef.current;
+    if (!box) return;
+    const speed = (STEP_WIDTH * song.tempo * song.subdivisions) / 60; // px per second
+    // Track the position here: re-reading scrollLeft could round small steps away and stall.
+    let x = box.scrollLeft;
+    let last = performance.now();
+    const frame = (now: number) => {
+      const end = box.scrollWidth - box.clientWidth;
+      x = Math.min(end, x + (speed * Math.max(0, now - last)) / 1000);
+      last = now;
+      box.scrollLeft = x;
+      if (x < end) {
+        leaveRaf.current = requestAnimationFrame(frame);
+      } else {
+        leaveRaf.current = undefined;
+        hidePlayhead();
+      }
+    };
+    leaveRaf.current = requestAnimationFrame(frame);
+  }, [song, hidePlayhead]);
+
+  /** Back from the image: jump to the start while the score is invisible, then fade it in over the image. */
+  const showScore = useCallback(() => {
+    cancelLeave();
+    hidePlayhead();
+    const box = scrollRef.current;
+    if (box) {
+      box.style.transition = 'none';
+      box.style.opacity = '0';
+      box.scrollLeft = 0;
+      void box.offsetWidth; // apply the jump before fading back in
+      box.style.transition = '';
+      box.style.opacity = '';
+    }
+    setRevealed(false);
+  }, [cancelLeave, hidePlayhead]);
+
+  /** Stopped partway: glide back to the start (no image). */
   const stop = useCallback(() => {
     player.current!.stop();
-    finish();
-  }, [finish]);
+    settle();
+    hidePlayhead();
+    scrollRef.current?.scrollTo({ left: 0, behavior: 'smooth' });
+  }, [settle, hidePlayhead]);
 
   const play = useCallback(() => {
-    setRevealed(false);
+    if (revealed) showScore();
     setPlaying(true);
     void player.current!.start(song, {
       fromStep: 0,
@@ -93,13 +153,20 @@ function Wedding({ song }: { song: Song }) {
       },
       // Only a full play-through reveals the image (Stop just goes back to the start).
       onEnd: () => {
-        finish();
+        settle();
         setRevealed(true);
+        leave();
       },
     });
-  }, [song, finish]);
+  }, [song, revealed, showScore, settle, leave]);
 
-  useEffect(() => () => player.current!.stop(), []);
+  useEffect(
+    () => () => {
+      player.current!.stop();
+      cancelLeave();
+    },
+    [cancelLeave],
+  );
 
   const activePitches = useMemo(() => {
     const set = new Set<NoteName>();
@@ -137,14 +204,16 @@ function Wedding({ song }: { song: Song }) {
         </div>
       </header>
 
-      <main className={`wed-card${revealed ? ' revealed' : ''}`}>
-        <div className={`wed-scroll${playing ? ' flowing' : ''}`} ref={scrollRef}>
+      {/* The image lies behind the score (backdrop) while it plays and shows where the score has flowed away. */}
+      <main className={`wed-card${playing || revealed ? ' backdrop' : ''}${revealed ? ' revealed' : ''}`}>
+        <div className={`wed-scroll${playing || revealed ? ' flowing' : ''}`} ref={scrollRef}>
           <WeddingScore song={song} stepWidth={STEP_WIDTH} activePitches={activePitches} playheadRef={playheadRef} />
         </div>
         <button
           type="button"
           className="wed-reveal"
-          onClick={() => setRevealed(false)}
+          style={{ height: gridHeight }}
+          onClick={showScore}
           tabIndex={revealed ? 0 : -1}
           aria-hidden={!revealed}
           title="クリックで譜面に戻る"

@@ -40,7 +40,7 @@ npm run build:wed   # 結婚式ページ用ビルド（base=/handbell_wed/、dis
 - `src/playerColors.json`: 担当者名→色のマスタ。メンバーや色を変えるときはここを直す。値は `{ "dark", "light" }`（ダークモード用／ライトモードと印刷用）か、両方共通の `#rrggbb`。`light-dark()` で切り替えるので、`.score-grid`・`.player-stats` に `color-scheme` を指定している
 - `src/samples/`: `*.bellscore.json` を置くと `import.meta.glob` で自動的にサンプル曲として同梱される
 - `tests/`: Vitest の単体テスト
-- 結婚式ページ（`/handbell_wed/`）: アラジンの譜面と再生ボタン（文言は英語の Start／Stop）だけの PC 専用ページ。エントリーは `wed/index.html`、設定は `vite.wed.config.ts`、コードは `src/wed/`（スタイルも `src/wed/wed.css` に分けていて `styles.css` は読まない）。担当名・回数・集計と未利用の行は出さず、音符の色は担当者色のまま。最後まで演奏すると譜面が消えて `src/wed/reveal.svg`（今は仮画像。差し替えるときはファイルと import を変える）が現れる。フォントは Google Fonts から読み込む
+- 結婚式ページ（`/handbell_wed/`）: アラジンの譜面と再生ボタン（文言は英語の Start／Stop）だけの PC 専用ページ。エントリーは `wed/index.html`、設定は `vite.wed.config.ts`、コードは `src/wed/`（スタイルも `src/wed/wed.css` に分けていて `styles.css` は読まない）。担当名・回数・集計と未利用の行は出さず、音符の色は担当者色のまま。再生中は譜面の裏に `src/wed/reveal.svg`（今は仮画像。差し替えるときはファイルと import を変える）を置いておき、最後まで演奏すると譜面が同じ速さで流れ去ってその画像が現れる（画像クリックか Start で譜面に戻る）。フォントは Google Fonts から読み込む
 
 ## ドメインの約束事
 - 音名は「オクターブ番号＋音名」。保存形式は常に♯表記（例: `3A`、`4C#`）。`4A` = 440Hz = MIDI 69
