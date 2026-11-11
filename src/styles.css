@@ -234,7 +234,7 @@ input[type='number'] { width: 64px; }
 
   .score-grid { --row-h: 30px; }
   .grid-scroll.thin .score-grid { --row-h: 20px; }
-  /* Phones: loop, flowing score and playback pitch keep their saved values but have no controls. */
+  /* Phones: loop and playback pitch have no controls (playback pitch keeps its saved value). */
   .playbar .wide-only { display: none; }
   .playbar .narrow-only { display: inline-flex; }
   .cell-player { font-size: 0.75em; }

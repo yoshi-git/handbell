@@ -138,8 +138,6 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
   if (!player.current) player.current = new Player();
   const [playing, setPlaying] = useState(false);
   const [loop, setLoop] = useState(false);
-  // Rhythm-game style: the playhead stays put and the score flows past it.
-  const [flow, setFlow] = useState(() => loadPref('bellscore.flow', '1') === '1');
   const [thinRows, setThinRows] = useState(() => loadPref<string>('bellscore.thinRows', '0') === '1');
   const [octaves, setOctaves] = useState(() => {
     // Handbells sound high, so play 2 octaves up unless this device chose otherwise.
@@ -185,17 +183,12 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
         if (!el || !box) return;
         el.style.display = 'block';
         el.style.transform = `translateX(${pos * stepWidth}px)`;
-        // Keep the playhead in view (the label columns are sticky on the left).
-        const x = el.offsetLeft + pos * stepWidth;
+        // Rhythm-game style: hold the playhead a quarter measure into the visible lanes (never past
+        // 30% of them, e.g. when zoomed in on a phone) and scroll the score under it.
+        // The label columns are sticky on the left.
         const labels = el.offsetLeft;
-        if (flow) {
-          // Hold the playhead a quarter measure into the visible lanes (never past 30% of them,
-          // e.g. when zoomed in on a phone) and scroll the score under it.
-          const hold = Math.min((stepsPerMeasure(song) * stepWidth) / 4, (box.clientWidth - labels) * 0.3);
-          box.scrollLeft = Math.max(0, x - labels - hold);
-        } else if (x > box.scrollLeft + box.clientWidth - 80 || x < box.scrollLeft + labels) {
-          box.scrollLeft = Math.max(0, x - labels - 40);
-        }
+        const hold = Math.min((stepsPerMeasure(song) * stepWidth) / 4, (box.clientWidth - labels) * 0.3);
+        box.scrollLeft = Math.max(0, pos * stepWidth - hold);
       },
       onEnd: () => {
         setPlaying(false);
@@ -203,7 +196,7 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
         hidePlayhead();
       },
     });
-  }, [song, startStep, loop, flow, stepWidth]);
+  }, [song, startStep, loop, stepWidth]);
 
   /** Step the start marker one measure back/forward and bring that measure to the left edge. */
   const moveMeasure = useCallback(
@@ -648,18 +641,6 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
           <input type="checkbox" checked={loop} onChange={(e) => setLoop(e.target.checked)} disabled={playing} />
           ループ
         </label>
-        <label className="wide-only" title="再生位置を固定して、譜面のほうを流します">
-          <input
-            type="checkbox"
-            checked={flow}
-            onChange={(e) => {
-              setFlow(e.target.checked);
-              savePref('bellscore.flow', e.target.checked ? '1' : '0');
-            }}
-            disabled={playing}
-          />
-          譜面を流す
-        </label>
         <label className="wide-only" title="鳴らす音の高さ。譜面の音名や書き出すデータは変わりません">
           音の高さ
           <select
@@ -715,7 +696,7 @@ export function Editor({ initial, source }: { initial: Song; source: EditorSourc
       </div>
 
       <div className="workspace">
-        <div className={`grid-scroll${playing && flow ? ' flowing' : ''}${thinRows ? ' thin' : ''}`} ref={scrollRef}>
+        <div className={`grid-scroll${playing ? ' flowing' : ''}${thinRows ? ' thin' : ''}`} ref={scrollRef}>
           <ScoreGrid
             song={song}
             players={players}
