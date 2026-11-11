@@ -136,7 +136,7 @@ function Wedding({ song }: { song: Song }) {
 
       <div className="wed-controls">
         <button className={`wed-play${playing ? ' playing' : ''}`} onClick={playing ? stop : play}>
-          {playing ? '■ 停止' : '▶ 再生'}
+          {playing ? '■ Stop' : '▶ Start'}
         </button>
       </div>
     </div>
