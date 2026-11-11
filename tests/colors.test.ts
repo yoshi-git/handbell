@@ -27,6 +27,12 @@ describe('player colors', () => {
     expect(playerColors(['小山', 'Aさん', '小幡'], MASTER).get('Aさん')).toBe(a);
   });
 
+  it('keeps other names off colors that look like a master color', () => {
+    const many = Array.from({ length: 30 }, (_, i) => `P${i}`);
+    const colors = [...playerColors(many, { 小幡: '#2e86df' }).values()];
+    expect(colors).not.toContain('#2e86de');
+  });
+
   it('colors everyone even when there are more players than colors', () => {
     const many = Array.from({ length: 30 }, (_, i) => `P${i}`);
     const colors = playerColors(many, MASTER);
