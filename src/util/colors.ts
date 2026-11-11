@@ -9,12 +9,37 @@ const PALETTE = [
 
 const HEX = /^#[0-9a-f]{6}$/i;
 
-/** Player name -> color, from src/playerColors.json (entries that are not #rrggbb are ignored). */
-export const PLAYER_COLOR_MASTER: Readonly<Record<string, string>> = Object.fromEntries(
-  Object.entries(masterData as Record<string, unknown>)
-    .filter((e): e is [string, string] => typeof e[1] === 'string' && HEX.test(e[1]))
-    .map(([name, color]) => [name.trim(), color.toLowerCase()]),
-);
+/** A player's color on light backgrounds (light mode, print) and on dark ones (dark mode). */
+export interface ThemeColor {
+  light: string;
+  dark: string;
+}
+
+/**
+ * Reads a name -> color master. Each value is "#rrggbb" (used on any background) or
+ * { "dark": "#rrggbb", "light": "#rrggbb" }; anything else is ignored.
+ */
+export function parseColorMaster(data: unknown): Record<string, ThemeColor> {
+  const out: Record<string, ThemeColor> = {};
+  if (!data || typeof data !== 'object') return out;
+  for (const [key, v] of Object.entries(data as Record<string, unknown>)) {
+    const pair = (typeof v === 'string' ? { light: v, dark: v } : v ?? {}) as Record<string, unknown>;
+    const { light, dark } = pair;
+    const name = key.trim();
+    if (name && typeof light === 'string' && HEX.test(light) && typeof dark === 'string' && HEX.test(dark)) {
+      out[name] = { light: light.toLowerCase(), dark: dark.toLowerCase() };
+    }
+  }
+  return out;
+}
+
+/** Player name -> color, from src/playerColors.json. */
+export const PLAYER_COLOR_MASTER: Readonly<Record<string, ThemeColor>> = parseColorMaster(masterData);
+
+/** CSS color for a master entry; light-dark() follows `color-scheme` (forced light in print, see styles.css). */
+function cssColor({ light, dark }: ThemeColor): string {
+  return light === dark ? light : `light-dark(${light}, ${dark})`;
+}
 
 /** Rough perceived distance between two #rrggbb colors ("redmean"; 0 = same, ~765 = black/white). */
 function colorDistance(a: string, b: string): number {
@@ -47,20 +72,18 @@ function hash(s: string): number {
  */
 export function playerColors(
   players: readonly string[],
-  master: Readonly<Record<string, string>> = PLAYER_COLOR_MASTER,
+  master: Readonly<Record<string, ThemeColor>> = PLAYER_COLOR_MASTER,
 ): Map<string, string> {
-  const known = new Map(Object.entries(master).map(([name, c]) => [name, c.toLowerCase()]));
-  const taken = [...known.values()];
+  const known = new Map(Object.entries(master));
+  const taken = [...known.values()].flatMap((c) => [c.light, c.dark]);
   const distinct = PALETTE.filter((c) => taken.every((m) => colorDistance(c, m) >= NEAR));
   const unused = PALETTE.filter((c) => !taken.includes(c));
   const pool = distinct.length ? distinct : unused.length ? unused : PALETTE;
   const out = new Map<string, string>();
-  const used = new Set<string>();
+  const used = new Set(taken);
   for (const name of players) {
     const c = known.get(name);
-    if (!c) continue;
-    out.set(name, c);
-    used.add(c);
+    if (c) out.set(name, cssColor(c));
   }
   const others = [...new Set(players)].filter((p) => p && !known.has(p)).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
   for (const name of others) {

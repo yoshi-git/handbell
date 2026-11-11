@@ -122,6 +122,9 @@ input[type='number'] { width: 64px; }
 /* Room after the last measure so the end of the song can also reach the fixed playhead. */
 .grid-scroll.flowing .score-grid { margin-right: 100%; }
 
+/* Player colors may be light-dark() pairs (src/playerColors.json); let them follow the theme. */
+.score-grid, .player-stats { color-scheme: light dark; }
+
 /* Per-player totals under the score; stays at the left edge while the score scrolls sideways. */
 .player-stats-wrap { position: sticky; left: 0; padding: 12px 16px 0; }
 .player-stats { border-collapse: collapse; font-size: 0.85em; }
@@ -269,4 +272,5 @@ input[type='number'] { width: 64px; }
   .print-only .player-input { display: none; }
   .print-only .player-stats { font-size: 8pt; break-inside: avoid; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .score-grid, .player-stats { color-scheme: light; }
 }

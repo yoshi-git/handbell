@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { players } from '../src/model/song';
 import { parseSong } from '../src/model/serialize';
-import { PLAYER_COLOR_MASTER, playerColor, playerColors } from '../src/util/colors';
+import masterData from '../src/playerColors.json';
+import { PLAYER_COLOR_MASTER, parseColorMaster, playerColor, playerColors } from '../src/util/colors';
 
-const MASTER = { 小幡: '#2e86de', 小山: '#e4572e' };
+const MASTER = parseColorMaster({ 小幡: '#2e86de', 小山: '#e4572e' });
 
 describe('player colors', () => {
   it('gives master names their master color whoever else is playing', () => {
@@ -17,7 +18,7 @@ describe('player colors', () => {
     const colors = playerColors([...names, '小幡'], MASTER);
     const auto = names.map((n) => colors.get(n)!);
     expect(new Set(auto).size).toBe(names.length);
-    for (const c of auto) expect(Object.values(MASTER)).not.toContain(c);
+    for (const c of auto) expect(['#2e86de', '#e4572e']).not.toContain(c);
     expect(playerColors([...names].reverse(), MASTER)).toEqual(playerColors(names, MASTER));
   });
 
@@ -29,7 +30,7 @@ describe('player colors', () => {
 
   it('keeps other names off colors that look like a master color', () => {
     const many = Array.from({ length: 30 }, (_, i) => `P${i}`);
-    const colors = [...playerColors(many, { 小幡: '#2e86df' }).values()];
+    const colors = [...playerColors(many, parseColorMaster({ 小幡: '#2e86df' })).values()];
     expect(colors).not.toContain('#2e86de');
   });
 
@@ -48,10 +49,22 @@ describe('player colors', () => {
     expect(playerColor([], '')).toBe('var(--unassigned)');
   });
 
+  it('switches master colors with the theme when light and dark differ', () => {
+    const master = parseColorMaster({ 小山: { dark: '#FFFFFF', light: '#424242' } });
+    expect(playerColors(['小山'], master).get('小山')).toBe('light-dark(#424242, #ffffff)');
+  });
+
+  it('skips master entries that are not colors', () => {
+    const master = parseColorMaster({ A: 'red', B: { dark: '#ffffff' }, C: { dark: '#ffffff', light: '#000' }, D: '#123456' });
+    expect(master).toEqual({ D: { light: '#123456', dark: '#123456' } });
+  });
+
   it('has a valid master with no two members sharing a color', () => {
-    const colors = Object.values(PLAYER_COLOR_MASTER);
-    for (const c of colors) expect(c).toMatch(/^#[0-9a-f]{6}$/);
-    expect(new Set(colors).size).toBe(colors.length);
+    expect(Object.keys(PLAYER_COLOR_MASTER)).toEqual(Object.keys(masterData));
+    for (const theme of ['light', 'dark'] as const) {
+      const colors = Object.values(PLAYER_COLOR_MASTER).map((c) => c[theme]);
+      expect(new Set(colors).size).toBe(colors.length);
+    }
   });
 
   it('colors each player the same in every sample song, and apart within a song', () => {
