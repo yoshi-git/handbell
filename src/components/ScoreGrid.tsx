@@ -40,7 +40,7 @@ export interface ScoreGridProps {
   onSelect?: (sel: Selection | null) => void;
   /** Show how many times each bell is struck, at the right edge. */
   showCounts?: boolean;
-  /** Bells left out of playback; their rows are drawn grey. */
+  /** Bells left out of playback; their player names are drawn grey (the notes keep their color). */
   silent?: ReadonlySet<NoteName>;
 }
 
@@ -139,9 +139,8 @@ export function ScoreGrid(props: ScoreGridProps) {
           key={pitch}
           pitch={pitch}
           player={song.assignments[pitch]}
-          color={
-            silent?.has(pitch) ? 'var(--unassigned)' : playerColor(props.players, playerName(song.assignments[pitch]))
-          }
+          color={playerColor(props.players, playerName(song.assignments[pitch]))}
+          muted={silent?.has(pitch) ?? false}
           notes={byPitch.get(pitch)}
           active={activePitches?.has(pitch) ?? false}
           count={counts ? counts.get(pitch) ?? 0 : undefined}
@@ -187,6 +186,8 @@ interface RowProps extends Omit<ScoreGridProps, 'activePitches' | 'playheadRef' 
   pitch: NoteName;
   player: string | undefined;
   color: string;
+  /** Left out of playback: the player name greys out, the notes keep their color. */
+  muted: boolean;
   notes: Note[] | undefined;
   active: boolean;
   /** Strikes of this bell in the song; undefined hides the column. */
@@ -286,7 +287,7 @@ const GridRow = memo(function GridRow(p: RowProps) {
   const memo = playerMemo(p.player);
   return (
     <div className={`grid-row${black ? ' black' : ''}${p.active ? ' active' : ''}`}>
-      <div className="cell-player" style={{ color: p.color }}>
+      <div className="cell-player" style={{ color: p.muted ? 'var(--unassigned)' : p.color }}>
         {p.readOnly || !p.onAssign ? (
           p.player || !p.unused ? (
             <span className="player-name" title={p.player}>
