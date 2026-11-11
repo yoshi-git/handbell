@@ -351,8 +351,18 @@
       "length": 24
     },
     {
-      "pitch": "4B",
+      "pitch": "4G#",
+      "step": 222,
+      "length": 6
+    },
+    {
+      "pitch": "5E",
       "step": 228,
+      "length": 6
+    },
+    {
+      "pitch": "4B",
+      "step": 234,
       "length": 6
     },
     {
@@ -773,7 +783,7 @@
     {
       "pitch": "4G#",
       "step": 492,
-      "length": 12
+      "length": 9
     },
     {
       "pitch": "4E",
@@ -823,7 +833,7 @@
     {
       "pitch": "4G#",
       "step": 516,
-      "length": 12
+      "length": 9
     },
     {
       "pitch": "4E",
