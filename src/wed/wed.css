@@ -85,6 +85,40 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--rose) transparent;
 }
+/* Played to the end: the score blurs away and the hidden image fades in over it. */
+.wed-scroll { transition: opacity 1s ease, filter 1s ease; }
+.wed-card.revealed .wed-scroll { opacity: 0; filter: blur(6px); pointer-events: none; }
+.wed-reveal {
+  position: absolute;
+  inset: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.96);
+  transition: opacity 0.5s ease, transform 0.5s ease, visibility 0s linear 0.5s;
+}
+.wed-card.revealed .wed-reveal {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 1.8s ease 0.5s, transform 1.8s ease 0.5s, visibility 0s;
+}
+.wed-reveal img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border: 6px solid #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgb(184 101 122 / 0.25);
+}
+.wed-reveal:focus-visible { outline: 2px solid var(--rose-deep); outline-offset: 4px; border-radius: 16px; }
+
 /* Room after the last measure so the end of the song can also reach the fixed playhead. */
 .wed-scroll.flowing .wed-grid { margin-right: 100%; }
 

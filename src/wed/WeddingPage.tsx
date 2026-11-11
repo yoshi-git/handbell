@@ -5,6 +5,8 @@ import { stepsPerMeasure } from '../model/song';
 import type { NoteName, Song } from '../model/types';
 import aladdin from '../samples/aladdin.bellscore.json';
 import { WeddingScore } from './WeddingScore';
+// Shown in place of the score once the song has been played to the end. Swap the file to change it.
+import revealImage from './reveal.svg';
 
 /** Width of one step in px (a 4/4 measure of 6 steps per beat is 240px). */
 const STEP_WIDTH = 10;
@@ -52,6 +54,8 @@ function Wedding({ song }: { song: Song }) {
   }
   const [playing, setPlaying] = useState(false);
   const [activeStep, setActiveStep] = useState<number | null>(null);
+  /** The song was played to the end: the score fades out and the image fades in. */
+  const [revealed, setRevealed] = useState(false);
   const playheadRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -69,6 +73,7 @@ function Wedding({ song }: { song: Song }) {
   }, [finish]);
 
   const play = useCallback(() => {
+    setRevealed(false);
     setPlaying(true);
     void player.current!.start(song, {
       fromStep: 0,
@@ -86,7 +91,11 @@ function Wedding({ song }: { song: Song }) {
         const hold = Math.min((stepsPerMeasure(song) * STEP_WIDTH) / 4, (box.clientWidth - labels) * 0.3);
         box.scrollLeft = Math.max(0, pos * STEP_WIDTH - hold);
       },
-      onEnd: finish,
+      // Only a full play-through reveals the image (Stop just goes back to the start).
+      onEnd: () => {
+        finish();
+        setRevealed(true);
+      },
     });
   }, [song, finish]);
 
@@ -128,10 +137,20 @@ function Wedding({ song }: { song: Song }) {
         </div>
       </header>
 
-      <main className="wed-card">
+      <main className={`wed-card${revealed ? ' revealed' : ''}`}>
         <div className={`wed-scroll${playing ? ' flowing' : ''}`} ref={scrollRef}>
           <WeddingScore song={song} stepWidth={STEP_WIDTH} activePitches={activePitches} playheadRef={playheadRef} />
         </div>
+        <button
+          type="button"
+          className="wed-reveal"
+          onClick={() => setRevealed(false)}
+          tabIndex={revealed ? 0 : -1}
+          aria-hidden={!revealed}
+          title="クリックで譜面に戻る"
+        >
+          <img src={revealImage} alt="" />
+        </button>
       </main>
 
       <div className="wed-controls">
